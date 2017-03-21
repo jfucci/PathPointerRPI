@@ -1,7 +1,7 @@
 package com.nullpointers.pathpointer;
 
 /**
- * Created by Anthony on 3/20/2017.
+ * A class for facilities.
  */
 public class Facility extends Location{
   private FacilityType type;

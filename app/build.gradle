@@ -25,6 +25,7 @@ android {
 
 repositories{
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -38,4 +39,5 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.0.57-beta'
 }
