@@ -19,8 +19,13 @@ public class Building {
     private Map<FacilityType, Set<Facility>> facilities;
     private Set<Room> rooms;
 
+    /** Constructs a blank Building. */
+    public Building() {
+
+    }
+
     /**
-     * Constructs a new Building.
+     * Constructs a new Building, containing the specified Facilities and Rooms.
      * @param facilities The Facilities located in this Building
      * @param rooms The Rooms located in this Building
      * @param name This Building's Name
