@@ -1,6 +1,5 @@
 package com.nullpointers.pathpointer;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -19,19 +18,21 @@ public class Building {
     private Map<FacilityType, Set<Facility>> facilities;
     private Set<Room> rooms;
 
-    /** Constructs a blank Building. */
+    /** Constructs a null Building. */
     public Building() {
 
     }
 
     /**
      * Constructs a new Building, containing the specified Facilities and Rooms.
-     * @param facilities The Facilities located in this Building
-     * @param rooms The Rooms located in this Building
+     * @param facilities The Facilities located in this Building.  If this argument is null, this
+     *     Building will contain zero facilities
+     * @param rooms The Rooms located in this Building.  If this argument is null, this Building
+     *      will contain zero rooms
      * @param name This Building's Name
      * @param id This Building's ID
      */
-    public Building(Collection<Facility> facilities, Collection<Room> rooms, String name, Integer id) {
+    public Building(Set<Facility> facilities, Set<Room> rooms, String name, Integer id) {
 
     }
 
