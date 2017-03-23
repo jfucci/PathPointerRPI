@@ -24,9 +24,10 @@ public class BuildingTest {
     private static Integer buildID;
     private static Set<Room> roomsA;
     private static Set<Room> roomsB;
-    private static Set<Facility> facilitiesA;
-    private static Set<Facility> facilitiesB;
-    private static Building b;
+    private static Set<Facility> facA;
+    private static Set<Facility> facB;
+    private static Building bA;
+    private static Building bB;
 
     @BeforeClass
     public static void init() {
@@ -53,22 +54,30 @@ public class BuildingTest {
         }
 
         // Initialize collections of Facilities to be used throughout this test
-        FacilityType[] type = {FacilityType.Bathroom, FacilityType.WaterFountain,
+        FacilityType[] typeA = {FacilityType.Bathroom, FacilityType.WaterFountain,
                 FacilityType.Printer, FacilityType.VendingMachine};
 
-        facilitiesA = new HashSet<>();
-        for (int i = 0; i < 2 * type.length; i++) {
-            facilitiesA.add(new Facility(locID, buildID, i * 1.4, i + 4.0, type[i % type.length]));
+        facA = new HashSet<>();
+        for (int i = 0; i < 2 * typeA.length; i++) {
+            facA.add(new Facility(locID, buildID, i * 1.4, i + 4.0, typeA[i % typeA.length]));
         }
 
-        facilitiesB = new HashSet<>();
-        for (int i = 2 * type.length; i < 4 * type.length; i++) {
-            facilitiesB.add(new Facility(locID, buildID, i * 1.4, i + 4.0, type[i % type.length]));
+        FacilityType[] typeB = {FacilityType.Bathroom, FacilityType.WaterFountain,
+                FacilityType.Printer};
+
+        facB = new HashSet<>();
+        for (int i = 0; i < 2 * typeB.length; i++) {
+            facB.add(new Facility(locID, buildID, i * 1.4, i + 4.0, typeB[i % typeB.length]));
         }
 
-        // This building object will be used repeatedly throughout these test cases
-        b = new Building(facilitiesA, roomsA, buildName, buildID);
+        // These building object will be used repeatedly throughout these test cases
+        bA = new Building(facA, roomsA, buildName, buildID);
+        bB = new Building(facB, roomsB, buildName, buildID);
     }
+
+    ///////////////////////////
+    // BEGIN BLACK BOX TESTS //
+    ///////////////////////////
 
     @Test
     public void testDefaultConstructor() {
@@ -84,67 +93,85 @@ public class BuildingTest {
     @Test
     public void testGetters() {
         // The typical case: all arguments non-null
-        assertEquals(buildName, b.getName());
-        assertEquals(buildID, b.getID());
+        assertEquals(buildName, bA.getName());
+        assertEquals(buildID, bA.getID());
 
         // The building name is null
-        Building b2 = new Building(facilitiesA, roomsA, null, buildID);
+        Building b2 = new Building(facA, roomsA, null, buildID);
         assertNull(b2.getName());
         assertEquals(buildID, b2.getID());
 
         // The building ID is null
-        Building b3 = new Building(facilitiesA, roomsA, buildName, null);
+        Building b3 = new Building(facA, roomsA, buildName, null);
         assertEquals(buildName, b3.getName());
         assertNull(b3.getID());
     }
 
     @Test
     public void testContains() {
-        // [b] should contain all the facilities and rooms in group A...
+        // [bA] should contain all the facilities and rooms in group A...
         for (Room r : roomsA) {
-            assertTrue(b.contains(r));
+            assertTrue(bA.contains(r));
         }
 
-        for (Facility f : facilitiesA) {
-            assertTrue(b.contains(f));
+        for (Facility f : facA) {
+            assertTrue(bA.contains(f));
         }
 
         // ...and none in group B
         for (Room r : roomsB) {
-            assertFalse(b.contains(r));
+            assertFalse(bA.contains(r));
         }
 
-        for (Facility f : facilitiesB) {
-            assertFalse(b.contains(f));
+        for (Facility f : facB) {
+            assertFalse(bA.contains(f));
+        }
+
+        // [bB] should contain all the facilities and rooms in group B...
+        for (Room r : roomsB) {
+            assertTrue(bB.contains(r));
+        }
+
+        for (Facility f : facB) {
+            assertTrue(bB.contains(f));
+        }
+
+        // ...and none in group A
+        for (Room r : roomsA) {
+            assertFalse(bB.contains(r));
+        }
+
+        for (Facility f : facA) {
+            assertFalse(bB.contains(f));
         }
     }
 
     @Test
     public void testCountFacilities() {
-        assertEquals(facilitiesA.size(), b.countFacilities());
+        assertEquals(facA.size(), bA.countFacilities());
     }
 
     @Test
     public void testCountFacilitiesOfType() {
-        // [facilitiesA] should contain two facilities of each type
-        assertEquals(2, b.countFacilitiesOfType(FacilityType.Bathroom));
-        assertEquals(2, b.countFacilitiesOfType(FacilityType.WaterFountain));
-        assertEquals(2, b.countFacilitiesOfType(FacilityType.Printer));
-        assertEquals(2, b.countFacilitiesOfType(FacilityType.VendingMachine));
+        // [facA] should contain two facilities of each type
+        assertEquals(2, bA.countFacilitiesOfType(FacilityType.Bathroom));
+        assertEquals(2, bA.countFacilitiesOfType(FacilityType.WaterFountain));
+        assertEquals(2, bA.countFacilitiesOfType(FacilityType.Printer));
+        assertEquals(2, bA.countFacilitiesOfType(FacilityType.VendingMachine));
     }
 
     @Test
     public void testCountRooms() {
-        assertEquals(roomsA.size(), b.countRooms());
+        assertEquals(roomsA.size(), bA.countRooms());
     }
 
     @Test
     public void testFacilityIterator() {
-        // [b] should contain all of the facilities in [facilitiesA]
-        // Iterate through the facilities of [b], removing them from [facilitiesA] as we go
-        // Use a clone of [facilitiesA] so that the original data is preserved
-        Set<Facility> facilitiesA2 = new HashSet<>();
-        facilitiesA2.addAll(facilitiesA);
+        // [bA] should contain all of the facilities in [facA]
+        // Iterate through the facilities of [bA], removing them from [facA] as we go
+        // Use a clone of [facA] so that the original data is preserved
+        Set<Facility> facA2 = new HashSet<>();
+        facA2.addAll(facA);
 
         // Iterate through each type of facility
         FacilityType[] types = {FacilityType.Bathroom, FacilityType.WaterFountain,
@@ -152,32 +179,32 @@ public class BuildingTest {
 
         Iterator<Facility> facilityIterator;
         for (FacilityType type : types) {
-            facilityIterator = b.facilityIterator(type);
+            facilityIterator = bA.facilityIterator(type);
             while (facilityIterator.hasNext()) {
                 Facility f = facilityIterator.next();
-                assertTrue(facilitiesA2.contains(f));
+                assertTrue(facA2.contains(f));
 
                 // The facilities being iterated through should all match the requested type
                 assertEquals(type, f.getType());
-                facilitiesA2.remove(f);
+                facA2.remove(f);
             }
         }
 
         // All elements should have been iterated through, which means the copy set from which
         // Facilities were removed should be empty
-        assertTrue(facilitiesA2.isEmpty());
+        assertTrue(facA2.isEmpty());
     }
 
     @Test
     public void testRoomIterator() {
-        // [b] should contain all of the rooms in [roomsA]
-        // Iterate through the rooms of [b], removing them from [roomsA] as we go
+        // [bA] should contain all of the rooms in [roomsA]
+        // Iterate through the rooms of [bA], removing them from [roomsA] as we go
         // Use a clone of [roomsA] so that the original data is preserved
         Set<Room> roomsA2 = new HashSet<>();
         roomsA2.addAll(roomsA);
 
         // Iterate through all rooms
-        Iterator<Room> roomIterator = b.roomIterator();
+        Iterator<Room> roomIterator = bA.roomIterator();
         while (roomIterator.hasNext()) {
             Room r = roomIterator.next();
             assertTrue(roomsA2.contains(r));
@@ -187,5 +214,24 @@ public class BuildingTest {
         // All elements should have been iterated through, which means the copy set from which
         // Facilities were removed should be empty
         assertTrue(roomsA2.isEmpty());
+    }
+
+    ///////////////////////////
+    // BEGIN WHITE BOX TESTS //
+    ///////////////////////////
+
+    @Test
+    public void testCountFacilitiesOfType_expectZero() {
+        // A different branch is taken if there are no facilities of a given type in a Building
+        // [bB] contains no vending machines; use this building to test this branch
+        assertEquals(0, bB.countFacilitiesOfType(FacilityType.VendingMachine));
+    }
+
+    @Test
+    public void testFacilitiyIterator_empty() {
+        // A different branch is taken if there are no facilities of a given type in a Building
+        // [bB] contains no vending machines; use this building to test this branch
+        Iterator<Facility> iter = bB.facilityIterator(FacilityType.VendingMachine);
+        assertFalse(iter.hasNext());
     }
 }
