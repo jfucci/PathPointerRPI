@@ -91,19 +91,22 @@ public class BuildingTest {
     }
 
     @Test
-    public void testGetters() {
+    public void testGetName() {
         // The typical case: all arguments non-null
         assertEquals(buildName, bA.getName());
-        assertEquals(buildID, bA.getID());
 
         // The building name is null
-        Building b2 = new Building(facA, roomsA, null, buildID);
-        assertNull(b2.getName());
-        assertEquals(buildID, b2.getID());
+        Building bNullName = new Building(facA, roomsA, null, buildID);
+        assertNull(bNullName.getName());
+    }
+
+    @Test
+    public void testGetID() {
+        // The typical case: all arguments non-null
+        assertEquals(buildID, bA.getID());
 
         // The building ID is null
         Building b3 = new Building(facA, roomsA, buildName, null);
-        assertEquals(buildName, b3.getName());
         assertNull(b3.getID());
     }
 
