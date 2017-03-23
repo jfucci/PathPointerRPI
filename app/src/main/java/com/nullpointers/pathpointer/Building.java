@@ -1,5 +1,7 @@
 package com.nullpointers.pathpointer;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +22,10 @@ public class Building {
 
     /** Constructs a null Building. */
     public Building() {
-
+        id = null;
+        name = null;
+        facilities = new HashMap<>();
+        rooms = new HashSet<>();
     }
 
     /**
@@ -33,15 +38,31 @@ public class Building {
      * @param id This Building's ID
      */
     public Building(Set<Facility> facilities, Set<Room> rooms, String name, Integer id) {
+        this.id = id;
+        this.name = name;
+        this.rooms = new HashSet<>(rooms);
 
+        // Organize facilities by type
+        this.facilities = new HashMap<>();
+        Iterator<Facility> iter = facilities.iterator();
+        while (iter.hasNext()) {
+            Facility fac = iter.next();
+            if (this.facilities.containsKey(fac.getType())) {
+                this.facilities.get(fac.getType()).add(fac);
+            } else {
+                Set<Facility> newSet = new HashSet<>();
+                newSet.add(fac);
+                this.facilities.put(fac.getType(), newSet);
+            }
+        }
     }
 
     public Integer getID() {
-        return null;
+        return id;
     }
 
     public String getName() {
-        return null;
+        return name;
     }
 
     /**
@@ -50,7 +71,11 @@ public class Building {
      * @return true if this Building contains the specified Facility, false otherwise
      */
     public boolean contains(Facility facility) {
-        return false;
+        if (!facilities.containsKey(facility.getType())) {
+            return false;
+        } else {
+            return facilities.get(facility.getType()).contains(facility);
+        }
     }
 
     /**
@@ -59,12 +84,18 @@ public class Building {
      * @return true if this Building contains the specified Room, false otherwise
      */
     public boolean contains(Room room) {
-        return false;
+        return rooms.contains(room);
     }
 
     /** Returns the number of Facilities of all types contained in this Building */
     public int countFacilities() {
-        return 0;
+        // Count the facilities of each type
+        int total = 0;
+        Iterator<Set<Facility>> iter = facilities.values().iterator();
+        while (iter.hasNext()) {
+            total += iter.next().size();
+        }
+        return total;
     }
 
     /**
@@ -72,12 +103,18 @@ public class Building {
      * @return The number of Facilities of specified type contained in this Building
      */
     public int countFacilitiesOfType(FacilityType type) {
-        return 0;
+        if (facilities.containsKey(type)) {
+            // If there are some facilities of this type, the type will appear in the map
+            return facilities.get(type).size();
+        } else {
+            // If there are no facilities of this type, the type will not appear in the map
+            return 0;
+        }
     }
 
     /** Returns the number of Rooms contained in this Building */
     public int countRooms() {
-        return 0;
+        return rooms.size();
     }
 
     /**
@@ -86,12 +123,19 @@ public class Building {
      * Building
      */
     public Iterator<Facility> facilityIterator(FacilityType type) {
-        return null;
+        if (facilities.containsKey(type)) {
+            // If there are some facilities of this type, the type will appear in the map
+            return facilities.get(type).iterator();
+        } else {
+            // If there are no facilities of this type, the type will not appear in the map
+            // Return an iterator to an empty set
+            return (new HashSet<Facility>()).iterator();
+        }
     }
 
     /** Returns an Iterator which can be used to traverse all Rooms in this Building */
     public Iterator<Room> roomIterator() {
-        return null;
+        return rooms.iterator();
     }
 
 }
