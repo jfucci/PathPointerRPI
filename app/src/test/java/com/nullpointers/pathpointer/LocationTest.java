@@ -6,9 +6,10 @@ import static org.junit.Assert.assertNull;
 import org.mockito.Mockito;
 
 /**
- * Created by Anthony on 3/20/2017.
+ * Unit Tests on Location ABC
  */
 public class LocationTest {
+
     @Test
     public void testDefaultConstructor() {
         Location loc = Mockito.mock(Location.class, Mockito.CALLS_REAL_METHODS);
