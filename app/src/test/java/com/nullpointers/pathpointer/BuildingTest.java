@@ -60,6 +60,7 @@ public class BuildingTest {
         facA = new HashSet<>();
         for (int i = 0; i < 2 * typeA.length; i++) {
             facA.add(new Facility(locID, buildID, i * 1.4, i + 4.0, typeA[i % typeA.length]));
+            locID++;
         }
 
         FacilityType[] typeB = {FacilityType.Bathroom, FacilityType.WaterFountain,
@@ -68,6 +69,7 @@ public class BuildingTest {
         facB = new HashSet<>();
         for (int i = 0; i < 2 * typeB.length; i++) {
             facB.add(new Facility(locID, buildID, i * 1.4, i + 4.0, typeB[i % typeB.length]));
+            locID++;
         }
 
         // These building object will be used repeatedly throughout these test cases
@@ -236,5 +238,35 @@ public class BuildingTest {
         // [bB] contains no vending machines; use this building to test this branch
         Iterator<Facility> iter = bB.facilityIterator(FacilityType.VendingMachine);
         assertFalse(iter.hasNext());
+    }
+
+    @Test
+    public void testFacilityImmutability() {
+        // Iterators should not cause representation exposure and violate immutability
+        Iterator<Facility> iter = bA.facilityIterator(FacilityType.Bathroom);
+        boolean flag = false;
+        try {
+            iter.remove();
+        } catch (Exception e) {
+            flag = true;
+        }
+
+        assertTrue(flag);
+        assertEquals(facA.size(), bA.countFacilities());
+    }
+
+    @Test
+    public void testRoomImmutability() {
+        // Iterators should not cause representation exposure
+        Iterator<Room> iter = bA.roomIterator();
+        boolean flag = false;
+        try {
+            iter.remove();
+        } catch (Exception e) {
+            flag = true;
+        }
+
+        assertTrue(flag);
+        assertEquals(roomsA.size(), bA.countRooms());
     }
 }
