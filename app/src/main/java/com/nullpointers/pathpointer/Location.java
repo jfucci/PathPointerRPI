@@ -1,7 +1,11 @@
 package com.nullpointers.pathpointer;
 
 /**
- * Created by Anthony on 3/20/2017.
+ * An abstract base class to represent locations within buildings.
+ * All locations must have a unique id.
+ *
+ * Note that the default constructor is provided only for compatibility.
+ * All usage of default constructed objects is undefined.
  */
 public abstract class Location {
     protected Integer id;
@@ -11,7 +15,7 @@ public abstract class Location {
     //id number of the floor plan image for this location
     protected Integer floorPlan;
 
-    /** @returns creates a Location with the provided attributes */
+    /** Returns a Location with the provided attributes */
     public Location(Integer id, Integer floorPlan, Double x, Double y) {
         this.id = id;
         this.floorPlan = floorPlan;
@@ -19,7 +23,7 @@ public abstract class Location {
         this.y = y;
     }
 
-    /** @returns creates a Location with null attributes */
+    /** Returns a Location with null attributes */
     public Location() {
         this.id = null;
         this.floorPlan = null;
@@ -27,16 +31,31 @@ public abstract class Location {
         this.y = null;
     }
 
-    /** @returns the id of this location*/
+    /** Returns the id of this location*/
     public Integer getId() {return id;}
 
-    /** @returns the id of the floor plan associated with this location */
+    /** Returns the id of the floor plan associated with this location */
     public Integer getFloorPlan() {return floorPlan;}
 
-    /** @returns the x coordinate of this location */
+    /** Returns the x coordinate of this location */
     public Double getX() {return x;}
 
-    /** @returns the y coordinate of this location */
+    /** Returns the y coordinate of this location */
     public Double getY() {return y;}
+
+    @Override
+    public boolean equals( Object other) {
+        if (!(other instanceof Location)) {
+            return false;
+        } else {
+            Location o = (Location) other;
+            return this.getId().equals(o.getId());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 
 }
