@@ -1,5 +1,7 @@
 package com.nullpointers.pathpointer;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -125,7 +127,7 @@ public class Building {
     public Iterator<Facility> facilityIterator(FacilityType type) {
         if (facilities.containsKey(type)) {
             // If there are some facilities of this type, the type will appear in the map
-            return facilities.get(type).iterator();
+            return Collections.unmodifiableMap(facilities).get(type).iterator();
         } else {
             // If there are no facilities of this type, the type will not appear in the map
             // Return an iterator to an empty set
@@ -135,7 +137,7 @@ public class Building {
 
     /** Returns an Iterator which can be used to traverse all Rooms in this Building */
     public Iterator<Room> roomIterator() {
-        return rooms.iterator();
+        return Collections.unmodifiableSet(rooms).iterator();
     }
 
 }
