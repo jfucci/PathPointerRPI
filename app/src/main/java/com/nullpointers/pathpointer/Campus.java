@@ -43,7 +43,7 @@ public class Campus {
         } else {
             throw new IllegalArgumentException("Invalid nodes folder for campus");
         }
-        File edgeDir = new File(nodesFolder);
+        File edgeDir = new File(edgesFolder);
         File[] edgeFiles = edgeDir.listFiles();
         if (edgeFiles != null) {
             for (File edgeFile : edgeFiles) {
