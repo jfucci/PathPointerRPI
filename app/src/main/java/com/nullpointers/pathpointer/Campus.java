@@ -34,7 +34,7 @@ public class Campus {
             for (File nodeFile : nodeFiles) {
                 int floorplan;
                 try {
-                    floorplan = Integer.parseInt(nodeFile.getName().split(".")[0]);
+                    floorplan = Integer.parseInt(nodeFile.getName().split("\\.")[0]);
                 } catch(NumberFormatException nfe) {
                     floorplan = -1;
                 }
@@ -43,23 +43,21 @@ public class Campus {
         } else {
             throw new IllegalArgumentException("Invalid nodes folder for campus");
         }
-        File edgeDir = new File(nodesFolder);
+        File edgeDir = new File(edgesFolder);
         File[] edgeFiles = edgeDir.listFiles();
         if (edgeFiles != null) {
             for (File edgeFile : edgeFiles) {
                 int floorplan;
                 try {
-                    floorplan = Integer.parseInt(edgeFile.getName().split(".")[0]);
+                    floorplan = Integer.parseInt(edgeFile.getName().split("\\.")[0]);
                 } catch(NumberFormatException nfe) {
                     floorplan = -1;
                 }
-                addNodes(edgeFile, floorplan);
+                addEdges(edgeFile, floorplan);
             }
         } else {
             throw new IllegalArgumentException("Invalid edge folder for campus");
         }
-
-
     }
 
     private void addNodes(File nodeInput, int floorplan) {

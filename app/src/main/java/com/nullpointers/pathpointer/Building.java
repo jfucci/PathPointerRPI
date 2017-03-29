@@ -46,15 +46,17 @@ public class Building {
 
         // Organize facilities by type
         this.facilities = new HashMap<>();
-        Iterator<Facility> iter = facilities.iterator();
-        while (iter.hasNext()) {
-            Facility fac = iter.next();
-            if (this.facilities.containsKey(fac.getType())) {
-                this.facilities.get(fac.getType()).add(fac);
-            } else {
-                Set<Facility> newSet = new HashSet<>();
-                newSet.add(fac);
-                this.facilities.put(fac.getType(), newSet);
+        if(facilities != null) {
+            Iterator<Facility> iter = facilities.iterator();
+            while (iter.hasNext()) {
+                Facility fac = iter.next();
+                if (this.facilities.containsKey(fac.getType())) {
+                    this.facilities.get(fac.getType()).add(fac);
+                } else {
+                    Set<Facility> newSet = new HashSet<>();
+                    newSet.add(fac);
+                    this.facilities.put(fac.getType(), newSet);
+                }
             }
         }
     }

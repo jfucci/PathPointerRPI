@@ -15,11 +15,16 @@ import static org.junit.Assert.assertTrue;
  */
 
 public class CampusTest {
+    private static final String NODES_DIRECTORY =
+            "C:\\Users\\zyteka\\AndroidStudioProjects\\PathPointerRPI\\" +
+                    "app\\src\\test\\java\\com\\nullpointers\\pathpointer\\TestData\\TestNodes";
+    private static final String EDGES_DIRECTORY =
+            "C:\\Users\\zyteka\\AndroidStudioProjects\\PathPointerRPI\\" +
+                    "app\\src\\test\\java\\com\\nullpointers\\pathpointer\\TestData\\TestEdges";
     private static Campus campus;
     @BeforeClass
     public static void init() {
-        campus = new Campus("/src/test/java/com.nullpointers.pathpointer/TestData/TestNodes",
-                "/src/test/java/com.nullpointers.pathpointer/TestData/0.csv");
+        campus = new Campus(NODES_DIRECTORY, EDGES_DIRECTORY);
 
     }
 
