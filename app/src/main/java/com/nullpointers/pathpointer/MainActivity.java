@@ -13,4 +13,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Campus c = new Campus(this, "Data/Nodes", "Data/Edges");
     }
+
+    public void viewCampusActivity(View view) {
+        Intent intent = new Intent(this, CampusActivity.class);
+        startActivity(intent);
+    }
 }
