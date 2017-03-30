@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner sourceBuildingSpinner;
     private Spinner destinationBuildingSpinner;
 
-    private static class StringWithTag {
+    private static class StringWithTag implements Comparable<StringWithTag> {
         public String string;
         public Object tag;
 
@@ -28,6 +29,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public String toString() {
             return string;
+        }
+
+        @Override
+        public int compareTo(StringWithTag other) {
+            return string.compareTo(other.toString());
         }
     }
 
@@ -46,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
             buildingList.add(new StringWithTag(key, value));
         }
+        Collections.sort(buildingList);
         ArrayAdapter<StringWithTag> buildingAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, buildingList);
         buildingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
