@@ -57,7 +57,7 @@ public class Campus {
 
                 InputStream nodeFileStream = null;
                 try {
-                    nodeFileStream = assetManager.open(nodeFile);
+                    nodeFileStream = assetManager.open(nodesFolder + '/' + nodeFile);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -80,7 +80,7 @@ public class Campus {
 
                 InputStream edgeFileStream = null;
                 try {
-                    edgeFileStream = assetManager.open(edgeFile);
+                    edgeFileStream = assetManager.open(edgesFolder + '/' + edgeFile);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
