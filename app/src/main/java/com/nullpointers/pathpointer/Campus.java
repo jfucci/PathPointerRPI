@@ -18,14 +18,24 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 /**
- * Created by zyteka on 3/20/2017.
+ * The Campus class contains information about all the buildings on campus, and has the graph for
+ * the campus. It contains functionality for finding the shortest path between locations on campus.
+ *
+ * @author Alexandra Zytek
+ * Created on Wed, 2017-Mar-23
  */
+
 public class Campus {
     Map<Integer, Building> buildings;
     Map<String, Integer> buildingsNameToId;
     Graph<Location, DefaultWeightedEdge> campusGraph;
     Map<Integer, Location> locations;
 
+    /**
+     * Makes a new Campus object that will take from the given nodes and edge folders
+     * @param nodesFolder a directory that contains folders with node data
+     * @param edgesFolder a directory that contains folders with edge data
+     */
     public Campus(Context context, String nodesFolder, String edgesFolder) {
         buildings = new HashMap<>();
         buildingsNameToId = new HashMap<>();
@@ -85,7 +95,7 @@ public class Campus {
                     e.printStackTrace();
                 }
                 if(edgeFileStream != null) {
-                    addEdges(edgeFileStream, floorplan);
+                    addEdges(edgeFileStream);
                 }
             }
         } else {
@@ -93,6 +103,11 @@ public class Campus {
         }
     }
 
+    /**
+     * Add the nodes from the nodeInput file to the graph
+     * @param nodeInput the file from which to retrieve the nodes
+     * @param floorplan the floorplan of all the nodes being added
+     */
     private void addNodes(InputStream nodeInput, int floorplan) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(nodeInput))) {
             String nextLocation;
@@ -106,9 +121,11 @@ public class Campus {
                     Room room = new Room(buildingID, floorplan, xCoord, yCoord, buildingName, buildingName);
                     Set<Room> rooms = new HashSet<>();
                     rooms.add(room);
-                    Building building = new Building(null, rooms, buildingName, buildingID);
-                    buildings.put(buildingID, building);
-                    buildingsNameToId.put(buildingName, buildingID);
+                    if(floorplan == 0) {
+                        Building building = new Building(null, rooms, buildingName, buildingID);
+                        buildings.put(buildingID, building);
+                        buildingsNameToId.put(buildingName, buildingID);
+                    }
                     campusGraph.addVertex(room);
                     locations.put(buildingID, room);
                 }
@@ -119,13 +136,17 @@ public class Campus {
                 }
             }
         } catch (FileNotFoundException fnfe) {
-            fnfe.printStackTrace();
+            System.out.println("Invalid nodes file");
         } catch (IOException io) {
-            io.printStackTrace();
+            System.out.println("IOException while opening file in addNodes");
         }
     }
 
-    private void addEdges(InputStream edgeInput, int floorplan) {
+    /**
+     * Add edges to the graph.
+     * @param edgeInput the file from which to get the edge data
+     */
+    private void addEdges(InputStream edgeInput) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(edgeInput))) {
             String nextEdge;
             while((nextEdge = br.readLine()) != null) {
@@ -135,9 +156,9 @@ public class Campus {
                 campusGraph.addEdge(locations.get(firstLocation), locations.get(secondLocation));
             }
         } catch (FileNotFoundException fnfe) {
-            fnfe.printStackTrace();
+            System.out.println("Invalid edge file");
         } catch (IOException io) {
-            io.printStackTrace();
+            System.out.println("IOException while opening file in addEdges");
         }
     }
 
@@ -178,7 +199,7 @@ public class Campus {
         GraphPath shortestPath = dijkstraShortestPath.getPath(startLocation, endLocation);
         List<Location> path = shortestPath.getVertexList();
         if(path.size() == 0) {
-            //ERROR CHECK
+            System.out.println("No path exists");
             return null;
         }
         List<List<Location>> segmentedPath = new ArrayList<>();
