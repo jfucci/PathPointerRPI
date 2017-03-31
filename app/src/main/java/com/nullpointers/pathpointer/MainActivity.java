@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
             return string;
         }
 
+
         @Override
         public int compareTo(StringWithTag other) {
             return string.compareTo(other.toString());
