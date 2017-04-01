@@ -36,8 +36,8 @@ public class CampusTest {
     @Test
     public void testGetBuildings() {
         Map<String, Integer> buildings = campus.getBuildings();
-        assertEquals(buildings.size(), 4);
-        assertEquals(buildings.get("Test 1").intValue(), 1);
+        assertEquals(4, buildings.size());
+        assertEquals(1, buildings.get("Test 1").intValue());
     }
 
     /**
@@ -46,33 +46,39 @@ public class CampusTest {
     @Test
     public void testGetRooms() {
         Map<String, Integer> rooms = campus.getRooms(1);
-        assertEquals(rooms.size(), 1);
-        assertEquals(rooms.get("Test 1").intValue(), 1);
+        assertEquals(3, rooms.size());
+        assertEquals(1, rooms.get("Test 1").intValue());
     }
 
     /**
-     * Test the getShortestPath
+     * Test the getShortestPath for a direct path
      */
     @Test
     public void testGetShortestPathSimple() {
         List<List<Location>> path = campus.getShortestPath(1, 4);
-        assertEquals(path.get(0).get(0).getId().intValue(), 1);
-        assertEquals(path.get(0).get(1).getId().intValue(), 4);
+        assertEquals(1, path.get(0).get(0).getId().intValue());
+        assertEquals(4, path.get(0).get(1).getId().intValue());
     }
 
+    /**
+     * Test the getShortestPath for an indirect path
+     */
     @Test
     public void testGetShortestPathHard() {
         List<List<Location>> path = campus.getShortestPath(1, 3);
-        assertEquals(path.get(0).get(0).getId().intValue(), 1);
-        assertEquals(path.get(0).get(1).getId().intValue(), 2);
-        assertEquals(path.get(0).get(2).getId().intValue(), 3);
+        assertEquals(1, path.get(0).get(0).getId().intValue());
+        assertEquals(2, path.get(0).get(1).getId().intValue());
+        assertEquals(3, path.get(0).get(2).getId().intValue());
     }
 
-    /**@Test
+    /**
+     * Test the getShortestPath for a path that has multiple floorplans
+     */
+    @Test
     public void testGetShortestPathMultipleFloorplans() {
-        List<List<Location>> path = campus.getShortestPath(1, 5);
-        assertEquals(path.get(0).get(0).getId().intValue(), 1);
-        assertEquals(path.get(0).get(1).getId().intValue(), 2);
-        assertEquals(path.get(1).get(0).getId().intValue(), 5);
-    }*/
+        List<List<Location>> path = campus.getShortestPath(1, 1000001);
+        assertEquals(1, path.get(0).get(0).getId().intValue());
+        assertEquals(2, path.get(0).get(1).getId().intValue());
+        assertEquals(1000001, path.get(1).get(0).getId().intValue());
+    }
 }
