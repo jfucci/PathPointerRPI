@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNull;
 import org.mockito.Mockito;
 
 /**
- * Unit Tests on Location ABC
+ * Unit Tests on Location ABC.  Class is mocked as it cannot be directly instantiated.
  */
 public class LocationTest {
 

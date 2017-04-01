@@ -1,5 +1,8 @@
 package com.nullpointers.pathpointer;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,37 +36,67 @@ public class Campus {
      * @param nodesFolder a directory that contains folders with node data
      * @param edgesFolder a directory that contains folders with edge data
      */
-    public Campus(String nodesFolder, String edgesFolder) {
+    public Campus(Context context, String nodesFolder, String edgesFolder) {
         buildings = new HashMap<>();
         buildingsNameToId = new HashMap<>();
         campusGraph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
         locations = new HashMap<>();
-        File nodeDir = new File(nodesFolder);
-        File[] nodeFiles = nodeDir.listFiles();
+        AssetManager assetManager = context.getAssets();
+        String[] nodeFiles = null;
+        String[] edgeFiles = null;
+
+        try {
+            nodeFiles = assetManager.list(nodesFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            edgeFiles = assetManager.list(edgesFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         if (nodeFiles != null) {
-            for (File nodeFile : nodeFiles) {
+            for (String nodeFile : nodeFiles) {
                 int floorplan;
                 try {
-                    floorplan = Integer.parseInt(nodeFile.getName().split("\\.")[0]);
+                    floorplan = Integer.parseInt(nodeFile.split("\\.")[0]);
                 } catch(NumberFormatException nfe) {
                     floorplan = -1;
                 }
-                addNodes(nodeFile, floorplan);
+
+                InputStream nodeFileStream = null;
+                try {
+                    nodeFileStream = assetManager.open(nodesFolder + '/' + nodeFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(nodeFileStream != null) {
+                    addNodes(nodeFileStream, floorplan);
+                }
             }
         } else {
             throw new IllegalArgumentException("Invalid nodes folder for campus");
         }
-        File edgeDir = new File(edgesFolder);
-        File[] edgeFiles = edgeDir.listFiles();
+
         if (edgeFiles != null) {
-            for (File edgeFile : edgeFiles) {
+            for (String edgeFile : edgeFiles) {
                 int floorplan;
                 try {
-                    floorplan = Integer.parseInt(edgeFile.getName().split("\\.")[0]);
+                    floorplan = Integer.parseInt(edgeFile.split("\\.")[0]);
                 } catch(NumberFormatException nfe) {
                     floorplan = -1;
                 }
-                addEdges(edgeFile);
+
+                InputStream edgeFileStream = null;
+                try {
+                    edgeFileStream = assetManager.open(edgesFolder + '/' + edgeFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(edgeFileStream != null) {
+                    addEdges(edgeFileStream);
+                }
             }
         } else {
             throw new IllegalArgumentException("Invalid edge folder for campus");
@@ -75,8 +108,8 @@ public class Campus {
      * @param nodeInput the file from which to retrieve the nodes
      * @param floorplan the floorplan of all the nodes being added
      */
-    private void addNodes(File nodeInput, int floorplan) {
-        try (BufferedReader br = new BufferedReader(new FileReader(nodeInput))) {
+    private void addNodes(InputStream nodeInput, int floorplan) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(nodeInput))) {
             String nextLocation;
             while ((nextLocation = br.readLine()) != null) {
                 String[] details = nextLocation.split(",");
@@ -113,8 +146,8 @@ public class Campus {
      * Add edges to the graph.
      * @param edgeInput the file from which to get the edge data
      */
-    private void addEdges(File edgeInput) {
-        try (BufferedReader br = new BufferedReader(new FileReader(edgeInput))) {
+    private void addEdges(InputStream edgeInput) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(edgeInput))) {
             String nextEdge;
             while((nextEdge = br.readLine()) != null) {
                 String[] details = nextEdge.split(",");

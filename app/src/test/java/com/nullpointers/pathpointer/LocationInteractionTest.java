@@ -6,6 +6,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 /**
+ * Test of the interactions between different subclasses of Location.
+ *
  * Tests of equality and hash codes of different classes extending Location.
  * Equality checked against self and in both directions to validate reflexiveness,
  * transitivity, and symmetry.

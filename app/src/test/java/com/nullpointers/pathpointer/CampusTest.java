@@ -27,7 +27,7 @@ public class CampusTest {
      */
     @BeforeClass
     public static void init() {
-        campus = new Campus(NODES_DIRECTORY, EDGES_DIRECTORY);
+        //campus = new Campus(NODES_DIRECTORY, EDGES_DIRECTORY);
     }
 
     /**

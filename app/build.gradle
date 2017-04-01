@@ -20,7 +20,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    packagingOptions { 
+    packagingOptions {
         pickFirst 'META-INF/LICENSE'
         pickFirst 'META-INF/NOTICE'
     }
@@ -34,6 +34,7 @@ android {
 repositories{
     mavenCentral()
     jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -47,6 +48,8 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
+    compile 'com.github.ligi:touchimageview:2.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.0.57-beta'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }

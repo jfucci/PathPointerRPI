@@ -3,6 +3,8 @@ package com.nullpointers.pathpointer;
 import org.junit.Test;
 
 /**
+ * Intersection unit tests.
+ *
  * Currently Intersection does not add any functionality to Location.
  * Therefore only the ability to instantiate Intersection is tested.
  */
