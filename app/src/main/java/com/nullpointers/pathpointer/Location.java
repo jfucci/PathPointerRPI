@@ -4,6 +4,8 @@ package com.nullpointers.pathpointer;
  * An abstract base class to represent locations within buildings.
  * All locations must have a unique id.
  *
+ * This class is immutable after creation.
+ *
  * Note that the default constructor is provided only for compatibility.
  * All usage of default constructed objects is undefined.
  */
@@ -57,5 +59,4 @@ public abstract class Location {
     public int hashCode() {
         return id.hashCode();
     }
-
 }

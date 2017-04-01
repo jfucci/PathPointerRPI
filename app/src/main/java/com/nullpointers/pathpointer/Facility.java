@@ -1,23 +1,24 @@
 package com.nullpointers.pathpointer;
 
 /**
- * A class for facilities.
+ * A class to represent facilities on RPI's Campus.
+ * Valid Facility Types are defined by the FacilityType Enum.
  */
 public class Facility extends Location{
-  private FacilityType type;
+    private FacilityType type;
 
-  /** Returns a Facility with the provided attributes */
-  public Facility(Integer id, Integer floorPlan, Double x, Double y, FacilityType type) {
-    super(id, floorPlan, x, y);
-    this.type = type;
-  }
+    /** Returns a Facility with the provided attributes */
+    public Facility(Integer id, Integer floorPlan, Double x, Double y, FacilityType type) {
+        super(id, floorPlan, x, y);
+        this.type = type;
+    }
 
-  /** Returns a Facility with null attributes */
-  public Facility() {
-    super();
-    this.type = null;
-  }
+    /** Returns a Facility with null attributes */
+    public Facility() {
+        super();
+        this.type = null;
+    }
 
-  /** Returns the type of this facility */
-  public FacilityType getType() {return type;}
+    /** Returns the type of this facility */
+    public FacilityType getType() {return type;}
 }

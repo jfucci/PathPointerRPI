@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
- * Created by Anthony on 3/20/2017.
+ * Facility unit tests.
  */
 public class FacilityTest {
     @Test

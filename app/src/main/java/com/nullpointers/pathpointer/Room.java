@@ -1,7 +1,7 @@
 package com.nullpointers.pathpointer;
 
 /**
- * Created by Anthony on 3/20/2017.
+ * Represents a classroom on campus.
  */
 public class Room extends Location {
   private String name;
