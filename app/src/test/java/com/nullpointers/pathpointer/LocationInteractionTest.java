@@ -112,7 +112,7 @@ public class LocationInteractionTest {
         assertAllEqual(equalIntersections);
         assertAllEqual(equalRooms);
         assertAllEqual(equalFacilities);
-        assertAllEqual(equalFacilities);
+        assertAllEqual(equalLocations);
     }
 
     @Test
