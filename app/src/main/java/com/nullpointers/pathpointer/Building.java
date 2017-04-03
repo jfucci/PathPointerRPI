@@ -22,6 +22,25 @@ public class Building {
     private Set<Room> rooms;
     private Map<FacilityType, Set<Facility>> facilities;
 
+    /**
+     * A helper function which adds the specified Facility to the specified Map.
+     * @param f The Facility to add
+     * @param facSet The Map to which the Facility would be added
+     * @return True if the Set was modified by this operation
+     */
+    private boolean addFacilityToSet(Facility f, Map<FacilityType, Set<Facility>> facSet) {
+        if (facSet.containsKey(f.getType())) {
+            // If this Facility type is already in the Map, add this Facility to its subset
+            return facSet.get(f.getType()).add(f);
+        } else {
+            // Otherwise, create a subset for this Facility
+            Set<Facility> newSet = new HashSet<>();
+            newSet.add(f);
+            facSet.put(f.getType(), newSet);
+            return true;
+        }
+    }
+
     /** Constructs a null Building. */
     public Building() {
         id = null;
@@ -49,22 +68,17 @@ public class Building {
         if(facilities != null) {
             Iterator<Facility> iter = facilities.iterator();
             while (iter.hasNext()) {
-                Facility fac = iter.next();
-                if (this.facilities.containsKey(fac.getType())) {
-                    this.facilities.get(fac.getType()).add(fac);
-                } else {
-                    Set<Facility> newSet = new HashSet<>();
-                    newSet.add(fac);
-                    this.facilities.put(fac.getType(), newSet);
-                }
+                addFacilityToSet(iter.next(), this.facilities);
             }
         }
     }
 
+    /** Returns the ID of this Building */
     public Integer getID() {
         return id;
     }
 
+    /** Returns the name of this Building */
     public String getName() {
         return name;
     }
@@ -75,7 +89,7 @@ public class Building {
      * @return True if the collection of Rooms in this Building changed due to this call
      */
     public boolean add(Room r) {
-        throw new RuntimeException("Method not implemented");
+        return rooms.add(r);
     }
 
     /**
@@ -84,7 +98,7 @@ public class Building {
      * @return True if the collection of Facilities in this Building changed due to this call
      */
     public boolean add(Facility f) {
-        throw new RuntimeException("Method not implemented");
+        return addFacilityToSet(f, facilities);
     }
 
     /**
@@ -93,7 +107,7 @@ public class Building {
      * @return True if the collection of Rooms in this Building changed due to this call
      */
     public boolean addAllRooms(Collection<? extends Room> r) {
-        throw new RuntimeException("Method not implemented");
+        return rooms.addAll(r);
     }
 
     /**
@@ -102,22 +116,31 @@ public class Building {
      * @return True if the collection of Facilities in this Building changed due to this call
      */
     public boolean addAllFacilities(Collection<? extends Facility> f) {
-        throw new RuntimeException("Method not implemented");
+        boolean result = false;
+
+        // Add each facility individually
+        for (Facility oneFac : f) {
+            result |= add(oneFac);
+        }
+
+        // If the collection was modified at least once, return true
+        return result;
     }
 
     /** Removes all Rooms and Facilities from this Building */
     public void clear() {
-        throw new RuntimeException("Method not implemented");
+        rooms.clear();
+        facilities.clear();
     }
 
     /** Removes all Rooms from this Building; Facilities are unchanged */
     public void clearRooms() {
-        throw new RuntimeException("Method not implemented");
+        rooms.clear();
     }
 
     /** Removes all Facilities from this Building; Rooms are unchanged */
     public void clearFacilities() {
-        throw new RuntimeException("Method not implemented");
+        facilities.clear();
     }
 
     /**
@@ -199,7 +222,7 @@ public class Building {
      * @return True if the collection of Rooms in this Building changed due to this call
      */
     boolean remove(Room r) {
-        throw new RuntimeException("Method not implemented");
+        return rooms.remove(r);
     }
 
     /**
@@ -208,7 +231,19 @@ public class Building {
      * @return True if the collection of Facilities in this Building changed due to this call
      */
     boolean remove(Facility f) {
-        throw new RuntimeException("Method not implemented");
+        // The facilities are organized by type
+        if (facilities.containsKey(f.getType())) {
+            boolean removed = facilities.get(f.getType()).remove(f);
+
+            // If the set of Facilities of this type is empty, remove it
+            if (facilities.get(f.getType()).isEmpty()) {
+                facilities.remove(f.getType());
+            }
+
+            return removed;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -218,7 +253,7 @@ public class Building {
      * @return True if the collection of Rooms in this Building changed due to this call
      */
     boolean removeAllRooms(Collection<? extends Room> r) {
-        throw new RuntimeException("Method not implemented");
+        return rooms.removeAll(r);
     }
 
     /**
@@ -228,7 +263,13 @@ public class Building {
      * @return True if the collection of Facilities in this Building changed due to this call
      */
     boolean removeAllFacilities(Collection<? extends Facility> f) {
-        throw new RuntimeException("Method not implemented");
+        // Remove each Facility individually
+        boolean result = false;
+
+        for (Facility oneFac : f) {
+            result |= remove(oneFac);
+        }
+        return result;
     }
 
     /**
@@ -238,7 +279,7 @@ public class Building {
      * @return True if the collection of Rooms in this Building changed due to this call
      */
     boolean retainAllRooms(Collection<? extends Room> r) {
-        throw new RuntimeException("Method not implemented");
+        return rooms.retainAll(r);
     }
 
     /**
@@ -248,7 +289,31 @@ public class Building {
      * @return True if the collection of Facilities in this Building changed due to this call
      */
     boolean retainAllFacilities(Collection<? extends Facility> f) {
-        throw new RuntimeException("Method not implemented");
+        boolean result = false;
+
+        // Organize the Facilities to be retained by type
+        Map<FacilityType, Set<Facility>> toAdd = new HashMap<>();
+        for (Facility oneFac : f) {
+            addFacilityToSet(oneFac, toAdd);
+        }
+
+        // Consider each subset of the main Facility set
+        for (FacilityType type : FacilityType.values()) {
+            // If the current set contains no facilities of specified type, move on
+            if (!facilities.containsKey(type)) {
+                continue;
+            }
+
+            if (toAdd.containsKey(type)) {
+                // If some Facilities from this subset are to be retained, retain them
+                result |= facilities.get(type).retainAll(toAdd.get(type));
+            } else {
+                // If no Facilities from this subset are to be retained, remove them all
+                facilities.remove(type);
+                result = true;
+            }
+        }
+        return result;
     }
 
 }

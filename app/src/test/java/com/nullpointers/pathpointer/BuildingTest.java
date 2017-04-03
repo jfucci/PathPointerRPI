@@ -372,7 +372,7 @@ public class BuildingTest {
 
     @Test
     public void testClear() {
-        Building b = new Building(facA, roomsB, buildName, buildID);
+        Building b = new Building(facA, roomsA, buildName, buildID);
 
         // After a Building is cleared, it should contain no Rooms or Facilities
         b.clear();
@@ -382,29 +382,29 @@ public class BuildingTest {
 
     @Test
     public void testClearRooms() {
-        Building b = new Building(facA, roomsB, buildName, buildID);
+        Building b = new Building(facA, roomsA, buildName, buildID);
 
         // After a Building is cleared of Rooms, it should contain no Rooms but Facilities should
         // be unchanged
-        b.clear();
+        b.clearRooms();
         assertEquals(0, b.countRooms());
         assertEquals(facA.size(), b.countFacilities());
     }
 
     @Test
     public void testClearFacilities() {
-        Building b = new Building(facA, roomsB, buildName, buildID);
+        Building b = new Building(facA, roomsA, buildName, buildID);
 
         // After a Building is cleared of Facilities, it should contain no Facilities but Rooms
         // should be unchanged
-        b.clear();
+        b.clearFacilities();
         assertEquals(roomsA.size(), b.countRooms());
         assertEquals(0, b.countFacilities());
     }
 
     @Test
     public void testRemoveRoom() {
-        Building b = new Building(facA, roomsB, buildName, buildID);
+        Building b = new Building(facA, roomsA, buildName, buildID);
 
         // Try to remove each room in set B, an action which should not modify the collection
         int size = b.countRooms();
@@ -431,7 +431,7 @@ public class BuildingTest {
 
     @Test
     public void testRemoveFacility() {
-        Building b = new Building(facA, roomsB, buildName, buildID);
+        Building b = new Building(facA, roomsA, buildName, buildID);
 
         // Try to remove each Facility in set B, an action which should not modify the collection
         int size = b.countFacilities();
@@ -446,7 +446,7 @@ public class BuildingTest {
             assertFalse(b.contains(f));
             assertEquals(--size, b.countFacilities());
         }
-        assertEquals(0, b.countRooms());
+        assertEquals(0, b.countFacilities());
 
         // Re-remove each Facility from set A, asserting that it no longer modifies the collection
         for (Facility f : facA) {
@@ -458,7 +458,7 @@ public class BuildingTest {
 
     @Test
     public void testRemoveAllRooms() {
-        Building b = new Building(facA, roomsB, buildName, buildID);
+        Building b = new Building(facA, roomsA, buildName, buildID);
         b.addAllRooms(roomsB);
 
         // Assert that [b] initially contains all Rooms from groups A and B
@@ -494,7 +494,7 @@ public class BuildingTest {
 
     @Test
     public void testRemoveAllFacilities() {
-        Building b = new Building(facA, roomsB, buildName, buildID);
+        Building b = new Building(facA, roomsA, buildName, buildID);
         b.addAllFacilities(facB);
 
         // Assert that [b] initially contains all Facilities from groups A and B
@@ -530,7 +530,7 @@ public class BuildingTest {
 
     @Test
     public void testRetainAllRooms() {
-        Building b = new Building(facA, roomsB, buildName, buildID);
+        Building b = new Building(facA, roomsA, buildName, buildID);
         b.addAllRooms(roomsB);
 
         // Assert that [b] initially contains all Rooms from groups A and B
@@ -566,7 +566,7 @@ public class BuildingTest {
 
     @Test
     public void testRetainAllFacilities() {
-        Building b = new Building(facA, roomsB, buildName, buildID);
+        Building b = new Building(facA, roomsA, buildName, buildID);
         b.addAllFacilities(facB);
 
         // Assert that [b] initially contains all Facilities from groups A and B
