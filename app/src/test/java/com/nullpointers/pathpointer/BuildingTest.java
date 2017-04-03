@@ -77,9 +77,9 @@ public class BuildingTest {
         bB = new Building(facB, roomsB, buildName, buildID);
     }
 
-    ///////////////////////////
-    // BEGIN BLACK BOX TESTS //
-    ///////////////////////////
+    /////////////////////////////////////
+    // BEGIN BLACK BOX IMMUTABLE TESTS //
+    /////////////////////////////////////
 
     @Test
     public void testDefaultConstructor() {
@@ -221,9 +221,9 @@ public class BuildingTest {
         assertTrue(roomsA2.isEmpty());
     }
 
-    ///////////////////////////
-    // BEGIN WHITE BOX TESTS //
-    ///////////////////////////
+    /////////////////////////////////////
+    // BEGIN WHITE BOX IMMUTABLE TESTS //
+    /////////////////////////////////////
 
     @Test
     public void testCountFacilitiesOfType_expectZero() {
@@ -268,5 +268,335 @@ public class BuildingTest {
 
         assertTrue(flag);
         assertEquals(roomsA.size(), bA.countRooms());
+    }
+
+    ///////////////////////////////////
+    // BEGIN BLACK BOX MUTABLE TESTS //
+    ///////////////////////////////////
+
+    @Test
+    public void testAddRoom() {
+        Building b = new Building(facA, roomsA, buildName, buildID);
+
+        // Try to re-add Rooms from set A, nothing should change
+        int size = b.countRooms();
+        for (Room r : roomsA) {
+            assertFalse(b.add(r));
+            assertEquals(size, b.countRooms());
+        }
+
+        // Add each Room in set B, asserting that it modifies the collection
+        for (Room r : roomsB) {
+            assertTrue(b.add(r));
+            assertTrue(b.contains(r));
+            assertEquals(++size, b.countRooms());
+        }
+
+        // Re-add each Room in set B, asserting that it no longer modifies the collection
+        for (Room r : roomsB) {
+            assertFalse(b.add(r));
+            assertTrue(b.contains(r));
+            assertEquals(size, b.countRooms());
+        }
+    }
+
+    @Test
+    public void testAddFacility() {
+        Building b = new Building(facA, roomsA, buildName, buildID);
+
+        // Try to re-add Facilities from set A, nothing should change
+        int size = b.countFacilities();
+        for (Facility f : facA) {
+            assertFalse(b.add(f));
+            assertEquals(size, b.countFacilities());
+        }
+
+        // Add each Facility in set B, asserting that it modifies the collection
+        for (Facility f : facB) {
+            assertTrue(b.add(f));
+            assertTrue(b.contains(f));
+            assertEquals(++size, b.countFacilities());
+        }
+
+        // Re-add each Facility in set B, asserting that it no longer modifies the collection
+        for (Facility f : facB) {
+            assertFalse(b.add(f));
+            assertTrue(b.contains(f));
+            assertEquals(size, b.countFacilities());
+        }
+    }
+
+    @Test
+    public void testAddAllRooms() {
+        Building b = new Building(facA, roomsA, buildName, buildID);
+
+        // Try to re-add Rooms from set A, nothing should change
+        int size = b.countRooms();
+        assertFalse(b.addAllRooms(roomsA));
+        assertEquals(size, b.countRooms());
+
+        // Add Rooms in set B, asserting that they modify the collection
+        size += roomsB.size();
+        assertTrue(b.addAllRooms(roomsB));
+        assertEquals(size, b.countRooms());
+        for (Room r : roomsB) {
+            assertTrue(b.contains(r));
+        }
+
+        // Re-add Rooms in set B, asserting that they no longer modify the collection
+        assertFalse(b.addAllRooms(roomsB));
+        assertEquals(size, b.countRooms());
+    }
+
+    @Test
+    public void testAddAllFacilities() {
+        Building b = new Building(facA, roomsA, buildName, buildID);
+
+        // Try to re-add Facilities from set A, nothing should change
+        int size = b.countFacilities();
+        assertFalse(b.addAllFacilities(facA));
+        assertEquals(size, b.countFacilities());
+
+        // Add Facilities in set B, asserting that they modify the collection
+        size += facB.size();
+        assertTrue(b.addAllFacilities(facB));
+        assertEquals(size, b.countFacilities());
+        for (Facility f : facB) {
+            assertTrue(b.contains(f));
+        }
+
+        // Re-add Facilities in set B, asserting that they no longer modify the collection
+        assertFalse(b.addAllFacilities(facB));
+        assertEquals(size, b.countFacilities());
+    }
+
+    @Test
+    public void testClear() {
+        Building b = new Building(facA, roomsB, buildName, buildID);
+
+        // After a Building is cleared, it should contain no Rooms or Facilities
+        b.clear();
+        assertEquals(0, b.countRooms());
+        assertEquals(0, b.countFacilities());
+    }
+
+    @Test
+    public void testClearRooms() {
+        Building b = new Building(facA, roomsB, buildName, buildID);
+
+        // After a Building is cleared of Rooms, it should contain no Rooms but Facilities should
+        // be unchanged
+        b.clear();
+        assertEquals(0, b.countRooms());
+        assertEquals(facA.size(), b.countFacilities());
+    }
+
+    @Test
+    public void testClearFacilities() {
+        Building b = new Building(facA, roomsB, buildName, buildID);
+
+        // After a Building is cleared of Facilities, it should contain no Facilities but Rooms
+        // should be unchanged
+        b.clear();
+        assertEquals(roomsA.size(), b.countRooms());
+        assertEquals(0, b.countFacilities());
+    }
+
+    @Test
+    public void testRemoveRoom() {
+        Building b = new Building(facA, roomsB, buildName, buildID);
+
+        // Try to remove each room in set B, an action which should not modify the collection
+        int size = b.countRooms();
+        for (Room r : roomsB) {
+            assertFalse(b.remove(r));
+            assertEquals(size, b.countRooms());
+        }
+
+        // Remove each room from set A, asserting that the size decrements each time
+        for (Room r : roomsA) {
+            assertTrue(b.remove(r));
+            assertFalse(b.contains(r));
+            assertEquals(--size, b.countRooms());
+        }
+        assertEquals(0, b.countRooms());
+
+        // Re-remove each Room in set A, asserting that it no longer modifies the collection
+        for (Room r : roomsA) {
+            assertFalse(b.remove(r));
+            assertFalse(b.contains(r));
+            assertEquals(0, b.countRooms());
+        }
+    }
+
+    @Test
+    public void testRemoveFacility() {
+        Building b = new Building(facA, roomsB, buildName, buildID);
+
+        // Try to remove each Facility in set B, an action which should not modify the collection
+        int size = b.countFacilities();
+        for (Facility f : facB) {
+            assertFalse(b.contains(f));
+            assertEquals(size, b.countFacilities());
+        }
+
+        // Remove each Facility from set A, asserting that the size decrements each time
+        for (Facility f : facA) {
+            assertTrue(b.remove(f));
+            assertFalse(b.contains(f));
+            assertEquals(--size, b.countFacilities());
+        }
+        assertEquals(0, b.countRooms());
+
+        // Re-remove each Facility from set A, asserting that it no longer modifies the collection
+        for (Facility f : facA) {
+            assertFalse(b.remove(f));
+            assertFalse(b.contains(f));
+            assertEquals(0, b.countFacilities());
+        }
+    }
+
+    @Test
+    public void testRemoveAllRooms() {
+        Building b = new Building(facA, roomsB, buildName, buildID);
+        b.addAllRooms(roomsB);
+
+        // Assert that [b] initially contains all Rooms from groups A and B
+        for (Room r : roomsA) {
+            assertTrue(b.contains(r));
+        }
+        for (Room r : roomsB) {
+            assertTrue(b.contains(r));
+        }
+        assertEquals(roomsA.size() + roomsB.size(), b.countRooms());
+
+        // Remove all rooms from set A, ensuring that the Rooms from set B remain and the collection
+        // is modified
+        assertTrue(b.removeAllRooms(roomsA));
+        for (Room r : roomsA) {
+            assertFalse(b.contains(r));
+        }
+        for (Room r : roomsB) {
+            assertTrue(b.contains(r));
+        }
+        assertEquals(roomsB.size(), b.countRooms());
+
+        // Re-remove all Rooms from set A, ensuring that nothing changes
+        assertFalse(b.removeAllRooms(roomsA));
+        for (Room r : roomsA) {
+            assertFalse(b.contains(r));
+        }
+        for (Room r : roomsB) {
+            assertTrue(b.contains(r));
+        }
+        assertEquals(roomsB.size(), b.countRooms());
+    }
+
+    @Test
+    public void testRemoveAllFacilities() {
+        Building b = new Building(facA, roomsB, buildName, buildID);
+        b.addAllFacilities(facB);
+
+        // Assert that [b] initially contains all Facilities from groups A and B
+        for (Facility f : facA) {
+            assertTrue(b.contains(f));
+        }
+        for (Facility f : facB) {
+            assertTrue(b.contains(f));
+        }
+        assertEquals(facA.size() + facB.size(), b.countFacilities());
+
+        // Remove all Facilities from set A, ensuring that the rooms from set B remain and the
+        // collection is modified
+        assertTrue(b.removeAllFacilities(facA));
+        for (Facility f : facA) {
+            assertFalse(b.contains(f));
+        }
+        for (Facility f : facB) {
+            assertTrue(b.contains(f));
+        }
+        assertEquals(facB.size(), b.countFacilities());
+
+        // Re-remove all Facilities from set A, ensuring that nothing changes
+        assertFalse(b.removeAllFacilities(facA));
+        for (Facility f : facA) {
+            assertFalse(b.contains(f));
+        }
+        for (Facility f : facB) {
+            assertTrue(b.contains(f));
+        }
+        assertEquals(facB.size(), b.countFacilities());
+    }
+
+    @Test
+    public void testRetainAllRooms() {
+        Building b = new Building(facA, roomsB, buildName, buildID);
+        b.addAllRooms(roomsB);
+
+        // Assert that [b] initially contains all Rooms from groups A and B
+        for (Room r : roomsA) {
+            assertTrue(b.contains(r));
+        }
+        for (Room r : roomsB) {
+            assertTrue(b.contains(r));
+        }
+        assertEquals(roomsA.size() + roomsB.size(), b.countRooms());
+
+        // Retain all rooms from set A, ensuring that the Rooms from set A remain and the collection
+        // is modified
+        assertTrue(b.retainAllRooms(roomsA));
+        for (Room r : roomsA) {
+            assertTrue(b.contains(r));
+        }
+        for (Room r : roomsB) {
+            assertFalse(b.contains(r));
+        }
+        assertEquals(roomsA.size(), b.countRooms());
+
+        // Re-retain all Rooms from set A, ensuring that nothing changes
+        assertFalse(b.retainAllRooms(roomsA));
+        for (Room r : roomsA) {
+            assertTrue(b.contains(r));
+        }
+        for (Room r : roomsB) {
+            assertFalse(b.contains(r));
+        }
+        assertEquals(roomsA.size(), b.countRooms());
+    }
+
+    @Test
+    public void testRetainAllFacilities() {
+        Building b = new Building(facA, roomsB, buildName, buildID);
+        b.addAllFacilities(facB);
+
+        // Assert that [b] initially contains all Facilities from groups A and B
+        for (Facility f : facA) {
+            assertTrue(b.contains(f));
+        }
+        for (Facility f : facB) {
+            assertTrue(b.contains(f));
+        }
+        assertEquals(facA.size() + facB.size(), b.countFacilities());
+
+        // Retain all Facilities from set A, ensuring that the rooms from set A remain and the
+        // collection is modified
+        assertTrue(b.retainAllFacilities(facA));
+        for (Facility f : facA) {
+            assertTrue(b.contains(f));
+        }
+        for (Facility f : facB) {
+            assertFalse(b.contains(f));
+        }
+        assertEquals(facA.size(), b.countFacilities());
+
+        // Re-remove all Facilities from set A, ensuring that nothing changes
+        assertFalse(b.retainAllFacilities(facA));
+        for (Facility f : facA) {
+            assertTrue(b.contains(f));
+        }
+        for (Facility f : facB) {
+            assertFalse(b.contains(f));
+        }
+        assertEquals(facA.size(), b.countFacilities());
     }
 }
