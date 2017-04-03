@@ -292,9 +292,9 @@ public class Building {
         boolean result = false;
 
         // Organize the Facilities to be retained by type
-        Map<FacilityType, Set<Facility>> toAdd = new HashMap<>();
+        Map<FacilityType, Set<Facility>> toRetain = new HashMap<>();
         for (Facility oneFac : f) {
-            addFacilityToSet(oneFac, toAdd);
+            addFacilityToSet(oneFac, toRetain);
         }
 
         // Consider each subset of the main Facility set
@@ -304,9 +304,12 @@ public class Building {
                 continue;
             }
 
-            if (toAdd.containsKey(type)) {
+            if (toRetain.containsKey(type)) {
                 // If some Facilities from this subset are to be retained, retain them
-                result |= facilities.get(type).retainAll(toAdd.get(type));
+                result |= facilities.get(type).retainAll(toRetain.get(type));
+                if (facilities.get(type).isEmpty()) {
+                    facilities.remove(type);
+                }
             } else {
                 // If no Facilities from this subset are to be retained, remove them all
                 facilities.remove(type);

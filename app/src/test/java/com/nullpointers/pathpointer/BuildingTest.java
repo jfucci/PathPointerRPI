@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.jar.Pack200;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -598,5 +599,100 @@ public class BuildingTest {
             assertFalse(b.contains(f));
         }
         assertEquals(facA.size(), b.countFacilities());
+    }
+
+    ///////////////////////////////////
+    // BEGIN BLACK BOX MUTABLE TESTS //
+    ///////////////////////////////////
+
+    @Test
+    public void testRetainAllFacilitiesTypes() {
+        // This test ensures that all branches regarding the classification of types are tested in
+        // the retainAllFacilities() function
+        int locID = 0;
+
+        // Create sets of Bathrooms, Water Fountains, and Printers
+        Set<Facility> bathrooms = new HashSet<>();
+        for (int i = 0; i < 5; ++i) {
+            bathrooms.add(new Facility(locID++, 0, i + 1.0, 6.0 - i, FacilityType.Bathroom));
+        }
+
+        Set<Facility> fountains = new HashSet<>();
+        for (int i = 0; i < 5; ++i) {
+            fountains.add(new Facility(locID++, 0, i - 1.0, 6.0 + i, FacilityType.WaterFountain));
+        }
+
+        Set<Facility> printers = new HashSet<>();
+        for (int i = 0; i < 5; ++i) {
+            printers.add(new Facility(locID++, 0, i + 6.0, 1.0 - i, FacilityType.Printer));
+        }
+
+        // Create a Building which contains the Bathrooms and Water Fountains
+        Set<Facility> facC = new HashSet<>(bathrooms);
+        facC.addAll(fountains);
+        Building b = new Building(facC, roomsA, buildName, buildID);
+
+        // Create a Facility Set which contains the Bathrooms and Printers
+        Set<Facility> toRetain = new HashSet<>(bathrooms);
+        toRetain.addAll(printers);
+
+        // Ensure the initial state is as expected
+        for (Facility f : bathrooms) {
+            assertTrue(b.contains(f));
+        }
+        for (Facility f : fountains) {
+            assertTrue(b.contains(f));
+        }
+        for (Facility f : printers) {
+            assertFalse(b.contains(f));
+        }
+        assertEquals(bathrooms.size() + fountains.size(), b.countFacilities());
+
+        // Ensure that only bathrooms are retained
+        assertTrue(b.retainAllFacilities(toRetain));
+        for (Facility f : bathrooms) {
+            assertTrue(b.contains(f));
+        }
+        for (Facility f : fountains) {
+            assertFalse(b.contains(f));
+        }
+        for (Facility f : printers) {
+            assertFalse(b.contains(f));
+        }
+        assertEquals(bathrooms.size(), b.countFacilities());
+
+        // Ensure that a double retention does nothing
+        assertFalse(b.retainAllFacilities(toRetain));
+        for (Facility f : bathrooms) {
+            assertTrue(b.contains(f));
+        }
+        for (Facility f : fountains) {
+            assertFalse(b.contains(f));
+        }
+        for (Facility f : printers) {
+            assertFalse(b.contains(f));
+        }
+        assertEquals(bathrooms.size(), b.countFacilities());
+    }
+
+    @Test
+    public void testRetainAllFacilitiesSameTypeDifferentFac() {
+        int locID = 0;
+
+        // Create sets of different Bathrooms
+        Set<Facility> bathroomsA = new HashSet<>();
+        for (int i = 0; i < 5; ++i) {
+            bathroomsA.add(new Facility(locID++, 0, i + 1.0, 6.0 - i, FacilityType.Bathroom));
+        }
+
+        Set<Facility> bathroomsB = new HashSet<>();
+        for (int i = 0; i < 5; ++i) {
+            bathroomsB.add(new Facility(locID++, 0, i - 1.0, 6.0 + i, FacilityType.Bathroom));
+        }
+
+        // Ensure that none of the bathrooms are retained, despite having the same type
+        Building b = new Building(bathroomsA, roomsA, buildName, buildID);
+        assertTrue(b.retainAllFacilities(bathroomsB));
+        assertEquals(0, b.countFacilities());
     }
 }
