@@ -6,8 +6,8 @@ package com.nullpointers.pathpointer;
  * 24 hour system.
  */
 class Time {
-    private int hour;
-    private int minute;
+    private final int hour;
+    private final int minute;
 
     /**
      * Constructor for a time object.
@@ -30,6 +30,28 @@ class Time {
 
     /** Returns the minute */
     public int getMinute() {return minute;}
+
+    /**
+     * Returns true if this time is the same or later than t, false otherwise
+     * @param t the time to compare this time to
+     */
+    public boolean isLaterThan(Time t) {
+        if(hour == t.getHour()) {
+            return minute >= t.getMinute();
+        }
+        return hour >= t.getHour();
+    }
+
+    /**
+     * Returns true if this time is earlier than t, false otherwise
+     * @param t the time to compare this time to
+     */
+    public boolean isEarlierThan(Time t) {
+        if(hour == t.getHour()) {
+            return minute < t.getMinute();
+        }
+        return hour < t.getHour();
+    }
 
     @Override
     public String toString() {

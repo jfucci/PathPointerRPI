@@ -8,9 +8,9 @@ import java.util.Arrays;
  * which the event occurs. Times are based on 24 hour system.
  */
 public class Occurrence {
-    private boolean[] daysOfWeek;
-    private Time start;
-    private Time end;
+    private final boolean[] daysOfWeek;
+    private final Time start;
+    private final Time end;
 
     /**
      * Constructor for occurrence.
@@ -41,6 +41,25 @@ public class Occurrence {
 
     /** Returns the ending time of this occurrence */
     public Time getEnd() {return end;}
+
+    /**
+     * Determines whether this occurrence overlaps occurrence o in time
+     * @param o the occurrence to compare to
+     * @return true if this occurrence overlaps o, false otherwise
+     */
+    public boolean overlaps(Occurrence o) {
+        for(int day = 0; day < 7; day++) {
+            if(this.daysOfWeek[day] == true && o.daysOfWeek[day] == true) {
+                if(this.start.isEarlierThan(o.getEnd()) && this.start.isLaterThan(o.getStart())) {
+                    return true;
+                }
+                if(o.getStart().isEarlierThan(this.end) && o.getStart().isLaterThan(this.start)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     @Override
     public boolean equals(Object other) {
