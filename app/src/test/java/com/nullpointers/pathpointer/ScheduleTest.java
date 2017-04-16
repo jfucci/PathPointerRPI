@@ -1,5 +1,6 @@
 package com.nullpointers.pathpointer;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.BeforeClass;
 
@@ -32,7 +33,7 @@ public class ScheduleTest {
 
 
     @BeforeClass
-    public void initialize() {
+    public static void initialize() {
         // Obtains an instance of the Schedule to work with
         sched = Schedule.getInstance();
 
@@ -115,7 +116,18 @@ public class ScheduleTest {
         e2bad = new Event("Harry Gets Detention", so2bad);
         e3bad = new Event("Harry Loses Bones in his Arm", so3bad);
         e4bad = new Event("Dementors Attack School", so4bad);
+
+        // Assert that the schedule file contains e1-e4
+        System.out.println(sched.size());
+        System.out.println(sched.contains(e1));
+        System.out.println(sched.contains(e2));
+        System.out.println(sched.contains(e3));
+        System.out.println(sched.contains(e4));
     }
+
+    ///////////////////////////
+    // BEGIN BLACK BOX TESTS //
+    ///////////////////////////
 
     @Test
     public void testSingletonBehavior() {
@@ -229,6 +241,7 @@ public class ScheduleTest {
         assertEquals(0, events.size());
     }
 
+    @Test
     public void testAdd() {
         sched.clear();
         int expectedSize = 0;
@@ -334,5 +347,15 @@ public class ScheduleTest {
         assertFalse(sched.remove(e2));
         assertEquals(expectedSize, sched.size());
         assertFalse(sched.contains(e2));
+    }
+
+    @AfterClass
+    public static void terminate() {
+        // Write events e1-e4 to the file for load testing
+        sched.clear();
+        sched.add(e1);
+        sched.add(e2);
+        sched.add(e3);
+        sched.add(e4);
     }
 }

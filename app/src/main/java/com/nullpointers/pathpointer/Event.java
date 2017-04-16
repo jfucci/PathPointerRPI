@@ -17,6 +17,11 @@ public class Event {
     //The weekly occurrences of this event
     private final Set<Occurrence> occurrences;
 
+    private Event() {
+        this.name = null;
+        this.occurrences = null;
+    }
+
     /**
      * Initialize a new Event with the given parameters. The occurrence set will be copied to avoid
      * representation exposure. Ensures that none of the occurrences overlap with each other.
@@ -85,4 +90,30 @@ public class Event {
         }
         return false;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Event)) {
+            return false;
+        }
+
+        Event e = (Event)o;
+        if (!this.getName().equals(e.getName())) {
+            return false;
+        } else if (this.numberOfOccurrences() != e.numberOfOccurrences()) {
+            return false;
+        } else {
+            return this.occurrences.containsAll(e.occurrences);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1000*name.hashCode();
+        for (Occurrence o : occurrences) {
+            result += o.hashCode();
+        }
+        return result;
+    }
+
 }

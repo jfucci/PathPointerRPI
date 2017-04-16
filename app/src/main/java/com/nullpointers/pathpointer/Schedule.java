@@ -1,57 +1,106 @@
 package com.nullpointers.pathpointer;
 
-import java.util.Collection;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializable;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
- * The Building class represents a Building on the Campus.  It contains references to all the Rooms
- * and Facilities in a Building, and provides functions to view but not edit these collections.
+ * The Schedule class represent's a user's weekly schedule.  It contains a set of non-overlapping
+ * Events and can store/load these events from a file.
  *
  * @author Matthew R. Dobbins
- * Created on Wed, 2017-Mar-23
+ * Created on Wed, 2017-Apr-16
  */
 public class Schedule {
 
     /** The location of the Schedule file on the device */
     public static final String FILENAME = "schedule.json";
 
+    // The singleton instance
+    private static Schedule instance = null;
+
+    // Event data
+    private Set<Event> events;
+
     /**
-     * Constructs a new Schedule object, which will contain events as specified in the file located
-     * at FILENAME.  If such a file does not exist, it will be initialized as an empty Schedule
+     * Construct a new, blank schedule
      */
     private Schedule() {
-        throw new RuntimeException("Not Yet Implemented");
+        events = new HashSet<>();
     }
 
     /**
      * Saves the current schedule to the file located at FILENAME.
+     * Requires instance != null.
      * @return True if the schedule was saved successfully, false otherwise
      */
-    private boolean saveToFile() {
-        throw new RuntimeException("Not Yet Implemented");
+    private static boolean saveToFile() {
+        try {
+            // Store in the specified file
+            File jsonFile = new File(FILENAME);
+
+            // Store the file using JSON
+            ObjectMapper om = new ObjectMapper();
+            om.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+            om.writeValue(jsonFile, instance);
+        } catch (IOException e) {
+            return false;
+        }
+        
+        // Done
+        return true;
     }
 
     /**
      * Loads the current schedule from the file located at FILENAME.
      * @return True if the schedule was loaded successfully, false otherwise
      */
-    private boolean loadFromFile() {
-        throw new RuntimeException("Not Yet Implemented");
+    private static boolean loadFromFile() {
+        try {
+            // Load from the specified file
+            File jsonFile = new File(FILENAME);
+
+            // Store the file using JSON
+            ObjectMapper om = new ObjectMapper();
+            om.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+            instance = om.readValue(jsonFile, Schedule.class);
+        } catch (IOException e) {
+            return false;
+        }
+
+        // Done
+        return true;
     }
 
-    /** Returns the single instance of Schedule */
+    /**
+     * Returns the single instance of Schedule.  If an instance does not yet exist, it will be
+     * loaded from the file at FILENAME.  If this file does not exist, a file equivalent to an
+     * empty Schedule will be created and loaded.  If some other failure occurs, an IOException
+     * will be thrown.
+     * @return The instance of Schedule
+     * @throws IOException if file cannot be loaded and parsed
+     */
     public static Schedule getInstance() {
-        throw new RuntimeException("Not Yet Implemented");
-    }
+        if (instance == null) {
+            if (!loadFromFile()) {
+                instance = new Schedule();
+            }
+        }
 
-    /** Returns the number of Events in this Schedule */
-    public int size() {
-        throw new RuntimeException("Not Yet Implemented");
-    }
-
-    /** Returns true if and only if this.size() == 0 */
-    public boolean isEmpty() {
-        throw new RuntimeException("Not Yet Implemented");
+        return instance;
     }
 
     /**
@@ -61,12 +110,29 @@ public class Schedule {
      * @return True if the Schedule contains [e], false otherwise
      */
     public boolean contains(Event e) {
-        throw new RuntimeException("Not Yet Implemented");
+        return events.contains(e);
+    }
+
+    /** Returns the number of Events in this Schedule */
+    public int size() {
+        return events.size();
+    }
+
+    /** Returns true if and only if this.size() == 0 */
+    @JsonIgnore
+    public boolean isEmpty() {
+        return events.isEmpty();
+    }
+
+    /** Removes any and all Events in this Schedule */
+    public void clear() {
+        events.clear();
+        saveToFile();
     }
 
     /** Returns an Iterator over the Events in this Schedule */
     public Iterator<Event> iterator() {
-        throw new RuntimeException("Not Yet Implemented");
+        return Collections.unmodifiableSet(events).iterator();
     }
 
     /**
@@ -76,7 +142,15 @@ public class Schedule {
      * @return True if the set of events was modified by this operation, false otherwise
      */
     public boolean add(Event event) {
-        throw new RuntimeException("Not Yet Implemented");
+        for (Event e : events) {
+            if (event.overlaps(e)) {
+                return false;
+            }
+        }
+
+        boolean result = events.add(event);
+        saveToFile();
+        return result;
     }
 
     /**
@@ -87,11 +161,8 @@ public class Schedule {
      * @return True if the set of Events was modified by this operation, false otherwise
      */
     public boolean remove(Event event) {
-        throw new RuntimeException("Not Yet Implemented");
-    }
-
-    /** Removes any and all Events in this Schedule */
-    public void clear() {
-        throw new RuntimeException("Not Yet Implemented");
+        boolean result = events.remove(event);
+        saveToFile();
+        return result;
     }
 }

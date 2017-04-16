@@ -9,6 +9,11 @@ class Time {
     private final int hour;
     private final int minute;
 
+    private Time() {
+        hour = 0;
+        minute = 0;
+    }
+
     /**
      * Constructor for a time object.
      * @param hour the hour represented
