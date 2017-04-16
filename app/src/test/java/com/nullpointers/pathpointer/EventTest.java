@@ -16,6 +16,10 @@ import static org.junit.Assert.assertTrue;
  */
 public class EventTest {
 
+    //occurrences take place in one of these two rooms
+    private static Room l1;
+    private static Room l2;
+
     //e1 and e2 have one occurrence each that overlap each other
     private static Event e1;
     private static Event e2;
@@ -38,6 +42,9 @@ public class EventTest {
 
     @BeforeClass
     public static void init() {
+        l1 = new Room(0, 1, 0.0, 1.0, "318", "DCC");
+        l2 = new Room(1, 1, 1.0, 0.0, "324", "DCC");
+
         o1 = new HashSet<>();
         o2 = new HashSet<>();
         o3 = new HashSet<>();
@@ -46,21 +53,21 @@ public class EventTest {
         boolean[] days1 = {true, false, false, false, false, false, false};
         boolean[] days2 = {false, true, false, false, false, false, false};
 
-        o1.add(new Occurrence(days1, new Time(12,0), new Time(14,0)));
-        o2.add(new Occurrence(days1, new Time(11,0), new Time(13,0)));
+        o1.add(new Occurrence(days1, new Time(12,0), new Time(14,0), l1));
+        o2.add(new Occurrence(days1, new Time(11,0), new Time(13,0), l2));
 
         e1 = new Event("Event 1", o1);
         e2 = new Event("Event 2", o2);
 
-        o1.add(new Occurrence(days1, new Time(16,0), new Time(17,0)));
-        o2.add(new Occurrence(days1, new Time(17,0), new Time(18,0)));
+        o1.add(new Occurrence(days1, new Time(16,0), new Time(17,0), l1));
+        o2.add(new Occurrence(days1, new Time(17,0), new Time(18,0), l2));
 
         e3 = new Event("Event 3", o1);
         e4 = new Event("Event 4", o2);
 
-        o3.add(new Occurrence(days2, new Time(12,0), new Time(14,0)));
-        o3.add(new Occurrence(days1, new Time(10,0), new Time(11,0)));
-        o4.add(new Occurrence(days1, new Time(14,0), new Time(16,0)));
+        o3.add(new Occurrence(days2, new Time(12,0), new Time(14,0), l1));
+        o3.add(new Occurrence(days1, new Time(10,0), new Time(11,0), l2));
+        o4.add(new Occurrence(days1, new Time(14,0), new Time(16,0), l1));
 
         e5 = new Event("Event 5", o3);
         e6 = new Event("Event 6", o4);
@@ -70,8 +77,8 @@ public class EventTest {
     public void testIllegalEvent() {
         boolean[] days1 = {true, false, false, false, false, false, false};
         Set<Occurrence> occurrences = new HashSet<>();
-        occurrences.add(new Occurrence(days1, new Time(8,0), new Time(10,0)));
-        occurrences.add(new Occurrence(days1, new Time(9,0), new Time(10,0)));
+        occurrences.add(new Occurrence(days1, new Time(8,0), new Time(10,0), l1));
+        occurrences.add(new Occurrence(days1, new Time(9,0), new Time(10,0), l2));
         new Event("Illegal Event", occurrences);
 
     }
@@ -82,8 +89,8 @@ public class EventTest {
     }
 
     @Test
-    public void testGetOccurrences() {
-        Iterator<Occurrence> itr = e3.getOccurrences();
+    public void testIterator() {
+        Iterator<Occurrence> itr = e3.occurIterator();
         Iterator<Occurrence> itr2 = o1.iterator();
         assertTrue(itr.next().equals(itr2.next()));
         assertTrue(itr.next().equals(itr2.next()));

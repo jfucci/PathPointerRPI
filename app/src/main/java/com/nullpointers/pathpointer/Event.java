@@ -1,5 +1,6 @@
 package com.nullpointers.pathpointer;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class Event {
     /**
      * @return an iterator for the event's set of occurrences
      */
-    public Iterator<Occurrence> getOccurrences() {
+    public Iterator<Occurrence> occurIterator() {
         return occurrences.iterator();
     }
 
@@ -73,7 +74,7 @@ public class Event {
      * @return true if this event overlaps e, false otherwise
      */
     public boolean overlaps(Event e) {
-        Iterator<Occurrence> eItr = e.getOccurrences();
+        Iterator<Occurrence> eItr = e.occurIterator();
         while(eItr.hasNext()) {
             Occurrence eOccurrence = eItr.next();
             for (Occurrence occurrence : occurrences) {
