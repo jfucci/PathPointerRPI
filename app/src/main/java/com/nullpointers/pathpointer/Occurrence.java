@@ -11,6 +11,7 @@ public class Occurrence {
     private final boolean[] daysOfWeek;
     private final Time start;
     private final Time end;
+    private final Room location;
 
     /**
      * Constructor for occurrence.
@@ -21,7 +22,7 @@ public class Occurrence {
      * @throws IllegalArgumentException if days of the week is not of
      * length 7.
      */
-    public Occurrence(boolean[] daysOfWeek, Time start, Time end) {
+    public Occurrence(boolean[] daysOfWeek, Time start, Time end, Room location) {
         if (daysOfWeek.length != 7) {
             String message = String.format(
                     "daysofWeek needs to have length 7, not %1$d.",daysOfWeek.length);
@@ -31,6 +32,7 @@ public class Occurrence {
         this.daysOfWeek = daysOfWeek;
         this.start = start;
         this.end = end;
+        this.location = location;
     }
 
     /** Returns the days of the week during which this occurrence takes place */
@@ -41,6 +43,9 @@ public class Occurrence {
 
     /** Returns the ending time of this occurrence */
     public Time getEnd() {return end;}
+
+    /** Returns the location of this occurrence */
+    public Room getLocation() {return location;};
 
     /**
      * Determines whether this occurrence overlaps occurrence o in time
@@ -67,12 +72,14 @@ public class Occurrence {
         else {
             Occurrence o = (Occurrence) other;
             return Arrays.equals(daysOfWeek,o.getDaysOfWeek()) &&
-                    start.equals(o.getStart()) && end.equals(o.getEnd());
+                    start.equals(o.getStart()) && end.equals(o.getEnd()) &&
+                    location.equals(o.getLocation());
         }
     }
 
     @Override
     public int hashCode() {
-        return 100000*Arrays.hashCode(daysOfWeek) + 1000*start.hashCode() + end.hashCode();
+        return 1000000*Arrays.hashCode(daysOfWeek) + 10000*start.hashCode() + 100*end.hashCode() +
+                location.hashCode();
     }
 }
