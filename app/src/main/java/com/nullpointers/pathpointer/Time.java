@@ -24,7 +24,7 @@ class Time {
     public Time(int hour, int minute) {
         if (0 > hour || 23 < hour || 0 > minute || 59 < minute) {
             String timeString = String.format("%1$02d:%2$02d",hour,minute);
-            throw new IllegalArgumentException("Illegal start time " + timeString);
+            throw new IllegalArgumentException("Illegal time " + timeString);
         }
         this.hour = hour;
         this.minute = minute;
