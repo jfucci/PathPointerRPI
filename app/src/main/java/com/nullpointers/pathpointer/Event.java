@@ -43,23 +43,17 @@ public class Event {
         this.occurrences = newOccurrences;
     }
 
-    /**
-     * @return the name of this string
-     */
+    /** Returns the name of this string */
     public String getName() {
         return name;
     }
 
-    /**
-     * @return an iterator for the event's set of occurrences
-     */
+    /** Returns an iterator for the event's set of occurrences */
     public Iterator<Occurrence> occurIterator() {
         return occurrences.iterator();
     }
 
-    /**
-     * @return the number of occurrences that this event has
-     */
+    /** Returns the number of occurrences that this event has */
     public int numberOfOccurrences() {
         return occurrences.size();
     }
