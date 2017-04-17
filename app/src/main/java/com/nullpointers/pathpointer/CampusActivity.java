@@ -42,7 +42,7 @@ public class CampusActivity extends AppCompatActivity {
         campusView.setImageBitmap(cBitmap);
 
         for (int i = 1; i < campusPath.size(); i++) {
-            drawPath(canvas, Color.GREEN, campusPath.get(i - 1).getX(), campusPath.get(i - 1).getY(), campusPath.get(i).getX(), campusPath.get(i).getY());
+            drawPath(canvas, Color.BLUE, campusPath.get(i - 1).getX(), campusPath.get(i - 1).getY(), campusPath.get(i).getX(), campusPath.get(i).getY());
         }
     }
 
