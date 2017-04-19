@@ -16,7 +16,7 @@ public class FacilityTest {
 
     @Test
     public void testConstructor() {
-        Facility f = new Facility(10,42,3.14,7.77, FacilityType.Bathroom);
-        assertEquals(f.getType(), FacilityType.Bathroom);
+        Facility f = new Facility(10,42,3.14,7.77, FacilityType.MBathroom);
+        assertEquals(f.getType(), FacilityType.MBathroom);
     }
 }

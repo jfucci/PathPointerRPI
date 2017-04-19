@@ -84,10 +84,10 @@ public class LocationInteractionTest {
         r2 = new Room(3,2,3.34,4.44,"af","bd");
         r3 = new Room(4,2,3.3,4.4,"a","b");
         r4 = new Room(7, 2,3.3,4.4, "aa","bb");
-        f1 = new Facility(5,2,3.3,4.4,FacilityType.Bathroom);
+        f1 = new Facility(5,2,3.3,4.4,FacilityType.MBathroom);
         f2 = new Facility(5,32,3.34,4.43,FacilityType.VendingMachine);
         f3 = new Facility(6,32,3.34,4.43,FacilityType.VendingMachine);
-        f4 = new Facility(7, 2,3.3,4.4, FacilityType.Bathroom);
+        f4 = new Facility(7, 2,3.3,4.4, FacilityType.MBathroom);
 
         equalIntersections = new Intersection[] {i1,i2};
         equalRooms = new Room[] {r1,r2};
