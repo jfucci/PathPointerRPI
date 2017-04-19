@@ -9,6 +9,7 @@ class Time {
     private final int hour;
     private final int minute;
 
+    /** Returns a time corresponding to midnight */
     private Time() {
         hour = 0;
         minute = 0;

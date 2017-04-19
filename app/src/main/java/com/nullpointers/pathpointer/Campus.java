@@ -183,11 +183,16 @@ public class Campus {
                         facName = String.
                         FacilityType fType = FacilityType.valueOf();*/
                         FacilityType fType = null;
-                        if (locationName.equals("$[MBATHROOM]")) fType = FacilityType.MBathroom;
-                        else if (locationName.equals("$[WBATHROOM]")) fType = FacilityType.WBathroom;
-                        else if (locationName.equals("$[WATERFOUNTAIN]")) fType = FacilityType.WaterFountain;
-                        else if (locationName.equals("$[PRINTER]")) fType = FacilityType.Printer;
-                        else if (locationName.equals("$[VENDINGMACHINE]")) fType = FacilityType.VendingMachine;
+                        if (locationName.equals("$[MBATHROOM]"))
+                            fType = FacilityType.MBathroom;
+                        else if (locationName.equals("$[WBATHROOM]"))
+                            fType = FacilityType.WBathroom;
+                        else if (locationName.equals("$[WATERFOUNTAIN]"))
+                            fType = FacilityType.WaterFountain;
+                        else if (locationName.equals("$[PRINTER]"))
+                            fType = FacilityType.Printer;
+                        else if (locationName.equals("$[VENDINGMACHINE]"))
+                            fType = FacilityType.VendingMachine;
                         else throw new IOException("Unknown Facility Type: " + locationName);
                         building = buildings.get(locationID);
                         fac = new Facility(modified_ID,floorplan,xCoord,yCoord,fType);
@@ -210,7 +215,7 @@ public class Campus {
                         locations.put(modified_ID, fac);
                     }
                     else throw new RuntimeException(String.format(
-                            "Could not add new location with ID: $1%d and building ID: $2%d",
+                            "Could not add new location with ID: &1$d and building ID: %2$d",
                                 locationID,buildingId));
 
 

@@ -13,6 +13,7 @@ public class Occurrence {
     private final Time end;
     private final Room location;
 
+    /** Returns an occurrence that never happens */
     private Occurrence() {
         daysOfWeek = new boolean[]{false, false, false, false, false, false, false};
         start = new Time(0, 0);
