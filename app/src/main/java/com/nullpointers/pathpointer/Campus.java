@@ -178,7 +178,7 @@ public class Campus {
                         room = new Room(modified_ID, floorplan, xCoord, yCoord,
                                 locationName, building.getName());
                     }
-                    else if (locationName.charAt(0) == '$') {
+                    else if (locationName.charAt(0) == '$') { //This is a facility on campus
                         /*String facName = locationName.substring(2,locationName.length()-1);
                         facName = String.
                         FacilityType fType = FacilityType.valueOf();*/
@@ -199,14 +199,21 @@ public class Campus {
                                 building.getName());
                     }
 
-                    if (room != null) building.add(room);
-                    else if (fac != null) building.add(fac);
+                    if (room != null) {
+                        building.add(room);
+                        campusGraph.addVertex(room);
+                        locations.put(modified_ID, room);
+                    }
+                    else if (fac != null) {
+                        building.add(fac);
+                        campusGraph.addVertex(fac);
+                        locations.put(modified_ID, fac);
+                    }
                     else throw new RuntimeException(String.format(
                             "Could not add new location with ID: $1%d and building ID: $2%d",
                                 locationID,buildingId));
 
-                    campusGraph.addVertex(room);
-                    locations.put(modified_ID, room);
+
                 }
                 else {
                     Intersection intersection = new Intersection(modified_ID, floorplan, xCoord, yCoord);
