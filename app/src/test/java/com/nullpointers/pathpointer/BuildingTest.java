@@ -55,7 +55,7 @@ public class BuildingTest {
         }
 
         // Initialize collections of Facilities to be used throughout this test
-        FacilityType[] typeA = {FacilityType.Bathroom, FacilityType.WaterFountain,
+        FacilityType[] typeA = {FacilityType.MBathroom, FacilityType.WaterFountain,
                 FacilityType.Printer, FacilityType.VendingMachine};
 
         facA = new HashSet<>();
@@ -64,7 +64,7 @@ public class BuildingTest {
             locID++;
         }
 
-        FacilityType[] typeB = {FacilityType.Bathroom, FacilityType.WaterFountain,
+        FacilityType[] typeB = {FacilityType.MBathroom, FacilityType.WaterFountain,
                 FacilityType.Printer};
 
         facB = new HashSet<>();
@@ -160,7 +160,7 @@ public class BuildingTest {
     @Test
     public void testCountFacilitiesOfType() {
         // [facA] should contain two facilities of each type
-        assertEquals(2, bA.countFacilitiesOfType(FacilityType.Bathroom));
+        assertEquals(2, bA.countFacilitiesOfType(FacilityType.MBathroom));
         assertEquals(2, bA.countFacilitiesOfType(FacilityType.WaterFountain));
         assertEquals(2, bA.countFacilitiesOfType(FacilityType.Printer));
         assertEquals(2, bA.countFacilitiesOfType(FacilityType.VendingMachine));
@@ -180,7 +180,7 @@ public class BuildingTest {
         facA2.addAll(facA);
 
         // Iterate through each type of facility
-        FacilityType[] types = {FacilityType.Bathroom, FacilityType.WaterFountain,
+        FacilityType[] types = {FacilityType.MBathroom, FacilityType.WaterFountain,
                 FacilityType.Printer, FacilityType.VendingMachine};
 
         Iterator<Facility> facilityIterator;
@@ -244,7 +244,7 @@ public class BuildingTest {
     @Test
     public void testFacilityImmutability() {
         // Iterators should not cause representation exposure and violate immutability
-        Iterator<Facility> iter = bA.facilityIterator(FacilityType.Bathroom);
+        Iterator<Facility> iter = bA.facilityIterator(FacilityType.MBathroom);
         boolean flag = false;
         try {
             iter.remove();
