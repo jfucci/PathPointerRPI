@@ -170,12 +170,27 @@ public class Campus {
                 double yCoord = Integer.parseInt(details[3]);
                 if(!locationName.equals("")) {  //ignore intersections
                     Building building;
-                    Room room;
+                    Room room = null;
+                    Facility fac = null;
                     if(buildingId == 0) {  //This is a building on campus
                         //Add the "overall building" room
                         building = buildings.get(locationID);
                         room = new Room(modified_ID, floorplan, xCoord, yCoord,
                                 locationName, building.getName());
+                    }
+                    else if (locationName.charAt(0) == '$') {
+                        /*String facName = locationName.substring(2,locationName.length()-1);
+                        facName = String.
+                        FacilityType fType = FacilityType.valueOf();*/
+                        FacilityType fType = null;
+                        if (locationName.equals("$[MBATHROOM]")) fType = FacilityType.MBathroom;
+                        else if (locationName.equals("$[WBATHROOM]")) fType = FacilityType.WBathroom;
+                        else if (locationName.equals("$[WATERFOUNTAIN]")) fType = FacilityType.WaterFountain;
+                        else if (locationName.equals("$[PRINTER]")) fType = FacilityType.Printer;
+                        else if (locationName.equals("$[VENDINGMACHINE]")) fType = FacilityType.VendingMachine;
+                        else throw new IOException("Unknown Facility Type: " + locationName);
+                        building = buildings.get(locationID);
+                        fac = new Facility(modified_ID,floorplan,xCoord,yCoord,fType);
                     }
                     else {
                         building = buildings.get(buildingId);
@@ -183,7 +198,13 @@ public class Campus {
                                 xCoord, yCoord, locationName,
                                 building.getName());
                     }
-                    building.add(room);
+
+                    if (room != null) building.add(room);
+                    else if (fac != null) building.add(fac);
+                    else throw new RuntimeException(String.format(
+                            "Could not add new location with ID: $1%d and building ID: $2%d",
+                                locationID,buildingId));
+
                     campusGraph.addVertex(room);
                     locations.put(modified_ID, room);
                 }
