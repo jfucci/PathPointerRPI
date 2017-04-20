@@ -180,9 +180,6 @@ public class Campus {
                                 locationName, building.getName());
                     }
                     else if (locationName.charAt(0) == '$') { //This is a facility on campus
-                        /*String facName = locationName.substring(2,locationName.length()-1);
-                        facName = String.
-                        FacilityType fType = FacilityType.valueOf();*/
                         FacilityType fType = null;
                         if (locationName.equals("$[MBATHROOM]"))
                             fType = FacilityType.MBathroom;
@@ -247,8 +244,14 @@ public class Campus {
                 int secondLocation = Integer.parseInt(details[1]) + (floorplan * ID_MOD);
                 DefaultWeightedEdge edge =
                         campusGraph.addEdge(locations.get(firstLocation), locations.get(secondLocation));
-                campusGraph.setEdgeWeight(edge,
-                        getDistance(locations.get(firstLocation), locations.get(secondLocation)));
+                if (floorplan == 0) {
+                    campusGraph.setEdgeWeight(edge,
+                            100 * getDistance(locations.get(firstLocation), locations.get(secondLocation)));
+                } else {
+                    campusGraph.setEdgeWeight(edge,
+                            getDistance(locations.get(firstLocation), locations.get(secondLocation)));
+                }
+
             }
         } catch (FileNotFoundException fnfe) {
             System.out.println("Invalid edge file");
@@ -388,8 +391,6 @@ public class Campus {
     public List<List<Location>> getShortestPath(int start, FacilityType type) {
         //Get starting location from map
         Location startLocation = locations.get(start);
-        Facility minDest = null;
-        Double minDist = null;
 
         //Find all shortest paths from the starting location using Dijkstra's Algorithm
         DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(campusGraph);
