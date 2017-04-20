@@ -99,6 +99,7 @@ public class RoomChooserFragment extends Fragment implements View.OnClickListene
 
             sourceRoomList.add(new StringWithTag(key, value));
         }
+        Collections.sort(sourceRoomList);
 
         if(sourceRoomList.size() == 1) {
             sourceRoomList.clear();

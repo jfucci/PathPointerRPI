@@ -68,8 +68,24 @@ public class FacilityChooserFragment extends Fragment implements View.OnClickLis
                 LinearLayout layout = (LinearLayout) view.findViewById(R.id.buttonlayout);
                 Button btn = new Button(this.getContext());
                 btn.setId(facilityType.getValue());
+                switch(facilityType) {
+                    case MBathroom:
+                        btn.setText("Men's Bathroom");
+                        break;
+                    case WBathroom:
+                        btn.setText("Women's Bathroom");
+                        break;
+                    case WaterFountain:
+                        btn.setText("Water Fountain");
+                        break;
+                    case Printer:
+                        btn.setText("Printer");
+                        break;
+                    case VendingMachine:
+                        btn.setText("Vending Machine");
+                        break;
+                }
                 final int id_ = btn.getId();
-                btn.setText(facilityType.toString());
                 layout.addView(btn, params);
                 Button btn1 = ((Button) view.findViewById(id_));
                 btn1.setOnClickListener(this);
@@ -112,6 +128,7 @@ public class FacilityChooserFragment extends Fragment implements View.OnClickLis
 
             sourceRoomList.add(new StringWithTag(key, value));
         }
+        Collections.sort(sourceRoomList);
 
         if(sourceRoomList.size() == 1) {
             sourceRoomList.clear();
