@@ -247,8 +247,14 @@ public class Campus {
                 int secondLocation = Integer.parseInt(details[1]) + (floorplan * ID_MOD);
                 DefaultWeightedEdge edge =
                         campusGraph.addEdge(locations.get(firstLocation), locations.get(secondLocation));
-                campusGraph.setEdgeWeight(edge,
-                        getDistance(locations.get(firstLocation), locations.get(secondLocation)));
+                if (floorplan == 0) {
+                    campusGraph.setEdgeWeight(edge,
+                            100 * getDistance(locations.get(firstLocation), locations.get(secondLocation)));
+                } else {
+                    campusGraph.setEdgeWeight(edge,
+                            getDistance(locations.get(firstLocation), locations.get(secondLocation)));
+                }
+
             }
         } catch (FileNotFoundException fnfe) {
             System.out.println("Invalid edge file");
