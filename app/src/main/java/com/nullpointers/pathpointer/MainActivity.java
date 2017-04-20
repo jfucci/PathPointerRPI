@@ -1,74 +1,133 @@
 package com.nullpointers.pathpointer;
 
-import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-public class MainActivity extends AppCompatActivity {
-
-    private Spinner sourceBuildingSpinner;
-    private Spinner destinationBuildingSpinner;
-
-    private static class StringWithTag implements Comparable<StringWithTag> {
-        public String string;
-        public Object tag;
-
-        public StringWithTag(String string, Object tag) {
-            this.string = string;
-            this.tag = tag;
-        }
-
-        @Override
-        public String toString() {
-            return string;
-        }
-
-
-        @Override
-        public int compareTo(StringWithTag other) {
-            return string.compareTo(other.toString());
-        }
-    }
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener,
+        RoomChooserFragment.OnFragmentInteractionListener,
+        BuildingChooserFragment.OnFragmentInteractionListener,
+        FacilityChooserFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Campus campus = new Campus(this, "Data/Nodes", "Data/Edges");
-        Map<String, Integer> buildingMap = campus.getBuildings();
-        sourceBuildingSpinner = (Spinner)findViewById(R.id.spinner1);
-        destinationBuildingSpinner = (Spinner)findViewById(R.id.spinner2);
-        List<StringWithTag> buildingList = new ArrayList<>();
-        for(Map.Entry<String,Integer> entry : buildingMap.entrySet()) {
-            String key = entry.getKey();
-            Integer value = entry.getValue();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-            buildingList.add(new StringWithTag(key, value));
-        }
-        Collections.sort(buildingList);
-        ArrayAdapter<StringWithTag> buildingAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, buildingList);
-        buildingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-        sourceBuildingSpinner.setAdapter(buildingAdapter);
-        destinationBuildingSpinner.setAdapter(buildingAdapter);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void viewCampusActivity(View view) {
-        Intent intent = new Intent(this, CampusActivity.class);
-        StringWithTag selectedItem = (StringWithTag)(sourceBuildingSpinner).getSelectedItem();
-        int sourceBuilding = (int)selectedItem.tag;
-        intent.putExtra("sourceBuilding", sourceBuilding);
-        selectedItem = (StringWithTag)(destinationBuildingSpinner).getSelectedItem();
-        int destinationBuilding = (int)selectedItem.tag;
-        intent.putExtra("destinationBuilding", destinationBuilding);
-        startActivity(intent);
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        Fragment fragment = null;
+        Class fragmentClass;
+
+        if (id == R.id.nav_building_building) {
+            fragmentClass = BuildingChooserFragment.class;
+        } else if (id == R.id.nav_room_room) {
+            fragmentClass = RoomChooserFragment.class;
+        } else if (id == R.id.nav_facility) {
+            fragmentClass = FacilityChooserFragment.class;
+        } else {
+            fragmentClass = RoomChooserFragment.class;
+        }
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onRoomFragmentInteraction(int source, int destination) {
+        Fragment fragment = null;
+
+        try {
+            fragment = FloorPlanViewGroupFragment.newInstance(source, destination);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+    }
+
+    @Override
+    public void onBuildingFragmentInteraction(int sourceBuilding, int destinationBuilding) {
+        onRoomFragmentInteraction(sourceBuilding, destinationBuilding);
+    }
+
+    @Override
+    public void onFacilityFragmentInteraction(int sourceRoom, FacilityType facilityType) {
+        Fragment fragment = null;
+
+        try {
+            fragment = FloorPlanViewGroupFragment.newInstance(sourceRoom, facilityType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
     }
 }

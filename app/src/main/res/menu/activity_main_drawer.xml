@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_building_building"
+            android:icon="@drawable/ic_menu_building"
+            android:title="Building to Building" />
+        <item
+            android:id="@+id/nav_room_room"
+            android:icon="@drawable/ic_menu_room"
+            android:title="Room to Room" />
+        <item
+            android:id="@+id/nav_facility"
+            android:icon="@drawable/ic_menu_facility"
+            android:title="Nearest Facility" />
+        <item
+            android:id="@+id/nav_schedule"
+            android:icon="@drawable/ic_menu_calendar"
+            android:title="Schedule" />
+    </group>
+
+</menu>

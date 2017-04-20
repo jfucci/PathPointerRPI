@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jgrapht.*;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
@@ -319,25 +320,18 @@ public class Campus {
     }
 
     /**
-     * Get the shortest path between the provided locations
-     * @param start ID of the first location
-     * @param end ID of the second location
-     * @return a GraphPath representing the shortest path between locations
+     *  Split a path by floorplan for frontend viewing
+     * @param shortestPath the path to split
+     * @return a path divided into sections by the floorplan to which
+     * each Location on the path belongs to
      */
-    public List<List<Location>> getShortestPath(int start, int end) {
-        Location startLocation = locations.get(start);
-        Location endLocation = locations.get(end);
-
-        DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(campusGraph);
-        GraphPath shortestPath = dijkstraShortestPath.getPath(startLocation, endLocation);
+    private List<List<Location>> splitPaths(GraphPath shortestPath) {
         List<Location> path = shortestPath.getVertexList();
-        List<List<Location>> segmentedPath = new ArrayList<>();
         if(path.size() == 0) {
             System.out.println("No path exists");
-            List<Location> empty = new ArrayList<>();
-            segmentedPath.add(empty);
-            return segmentedPath;
+            return null;
         }
+        List<List<Location>> segmentedPath = new ArrayList<>();
         int currentFloorplan = path.get(0).getFloorPlan();
         int i = 0;
         while(i < path.size()) {
@@ -352,5 +346,60 @@ public class Campus {
             }
         }
         return segmentedPath;
+    }
+
+    /**
+     * Get the shortest path between the provided locations
+     * @param start ID of the first location
+     * @param end ID of the second location
+     * @return a GraphPath representing the shortest path between locations
+     */
+    public List<List<Location>> getShortestPath(int start, int end) {
+        Location startLocation = locations.get(start);
+        Location endLocation = locations.get(end);
+
+        DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(campusGraph);
+        GraphPath shortestPath = dijkstraShortestPath.getPath(startLocation, endLocation);
+        return splitPaths(shortestPath);
+    }
+
+    /**
+     * Get the shortest path between the starting location and a facility of given type
+     * @param start ID of the first location
+     * @param type type of facility to find
+     * @return a path representing the shortest path to the nearest 'type' facility
+     */
+    public List<List<Location>> getShortestPath(int start, FacilityType type) {
+        //Get starting location from map
+        Location startLocation = locations.get(start);
+        Facility minDest = null;
+        Double minDist = null;
+
+        //Find all shortest paths from the starting location using Dijkstra's Algorithm
+        DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(campusGraph);
+
+        //Search all facilities of given type for nearest one
+
+        GraphPath currentShortestPath = null;
+        GraphPath facilityPath;
+        double currentLowestWeight = Double.MAX_VALUE;
+
+        for (Map.Entry<Integer,Building> entry : buildings.entrySet()) {
+            Building building = entry.getValue();
+            Iterator<Facility> facilityIterator = building.facilityIterator(type);
+            while (facilityIterator.hasNext()) {
+                Facility facility = facilityIterator.next();
+                if(facility.getType() == type) {
+                    facilityPath = dijkstraShortestPath.getPath(startLocation, facility);
+                    if(facilityPath.getWeight() < currentLowestWeight) {
+                        currentShortestPath = facilityPath;
+                        currentLowestWeight = facilityPath.getWeight();
+                    }
+                }
+            }
+        }
+
+        //Split paths by floorplan
+        return splitPaths(currentShortestPath);
     }
 }
