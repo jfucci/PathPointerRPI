@@ -84,6 +84,8 @@ public class FacilityChooserFragment extends Fragment implements View.OnClickLis
                     case VendingMachine:
                         btn.setText("Vending Machine");
                         break;
+                    default:
+                        break;
                 }
                 final int id_ = btn.getId();
                 layout.addView(btn, params);
