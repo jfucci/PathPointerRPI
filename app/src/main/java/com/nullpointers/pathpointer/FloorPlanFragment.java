@@ -58,15 +58,17 @@ public class FloorPlanFragment extends Fragment {
         int floorPlanRes = this.getContext().getResources().getIdentifier("map_" + path.get(0).getFloorPlan(), "drawable", this.getContext().getPackageName());
 
         mapView = (TouchImageView) view.findViewById(R.id.mapView);
+        // make a bitmap of the campus/floorplan images so that it is drawable
         Resources res = getResources();
         Bitmap imgBitmap = BitmapFactory.decodeResource(res, floorPlanRes);
         Bitmap cBitmap = imgBitmap.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(cBitmap);
         mapView.setImageBitmap(cBitmap);
-
+        // use the list of nodes to draw a path on the images
         for (int i = 1; i < path.size(); i++) {
             drawPath(canvas, path.get(0).getFloorPlan(), Color.BLUE, path.get(i - 1).getX(), path.get(i - 1).getY(), path.get(i).getX(), path.get(i).getY());
         }
+        // draw a green dot to indicate where the user starts
         drawDot(canvas, path.get(0).getFloorPlan(), Color.GREEN, path.get(0).getX(), path.get(0).getY());
 
         return view;
@@ -93,6 +95,7 @@ public class FloorPlanFragment extends Fragment {
         Paint paint = new Paint();
         paint.setColor(color);
         paint.setStrokeWidth(10);
+        // draw a line that scales even upon a user zooming
         canvas.drawLine((float)(startx*xscale), (float)(starty*yscale), (float)(endx*xscale), (float)(endy*yscale), paint);
     }
 

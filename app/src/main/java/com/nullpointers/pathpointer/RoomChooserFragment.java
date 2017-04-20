@@ -70,16 +70,17 @@ public class RoomChooserFragment extends Fragment implements View.OnClickListene
             buildingList.add(new StringWithTag(key, value));
         }
         Collections.sort(buildingList);
-
+        // get the spinners from the xml
         sourceBuildingSpinner = (Spinner) view.findViewById(R.id.spinner1);
         destinationBuildingSpinner = (Spinner) view.findViewById(R.id.spinner2);
         sourceRoomSpinner= (Spinner) view.findViewById(R.id.spinner3);
         destinationRoomSpinner = (Spinner) view.findViewById(R.id.spinner4);
-
+        // attach the list of buildings to the building Spinners
         ArrayAdapter<StringWithTag> buildingAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, buildingList);
         buildingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sourceBuildingSpinner.setAdapter(buildingAdapter);
         destinationBuildingSpinner.setAdapter(buildingAdapter);
+        // set spinner listeners to listen to onItemSelected()
         sourceBuildingSpinner.setOnItemSelectedListener(this);
         destinationBuildingSpinner.setOnItemSelectedListener(this);
         return view;
@@ -89,6 +90,7 @@ public class RoomChooserFragment extends Fragment implements View.OnClickListene
     }
 
     public void onItemSelected (AdapterView<?> parent, View view, int position, long id){
+        // get building id to populate Room spinners
         StringWithTag sourceBuilding = (StringWithTag) (sourceBuildingSpinner).getSelectedItem();
         int sourceId = (int)sourceBuilding.tag;
         Map<String, Integer> sourceRoomMap = campus.getRooms(sourceId);
@@ -100,14 +102,14 @@ public class RoomChooserFragment extends Fragment implements View.OnClickListene
             sourceRoomList.add(new StringWithTag(key, value));
         }
         Collections.sort(sourceRoomList);
-
+        // do not display building name in room spinner
         if(sourceRoomList.size() == 1) {
             sourceRoomList.clear();
         }
-
+        // make adapter to attach roomList for room spinners
         ArrayAdapter<StringWithTag> sourceRoomAdapter = new ArrayAdapter<>(this.getContext(),android.R.layout.simple_spinner_item, sourceRoomList);
         sourceRoomAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
+        // populate room list from destination building id
         StringWithTag destinationBuilding = (StringWithTag) (destinationBuildingSpinner).getSelectedItem();
         int destinationId = (int) destinationBuilding.tag;
         Map<String, Integer> destinationRoomMap = campus.getRooms(destinationId);
@@ -121,9 +123,9 @@ public class RoomChooserFragment extends Fragment implements View.OnClickListene
         if(destinationRoomList.size() == 1) {
             destinationRoomList.clear();
         }
+
         ArrayAdapter<StringWithTag> destinationRoomAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, destinationRoomList);
         destinationRoomAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         sourceRoomSpinner.setAdapter(sourceRoomAdapter);
         destinationRoomSpinner.setAdapter(destinationRoomAdapter);
 
@@ -145,6 +147,7 @@ public class RoomChooserFragment extends Fragment implements View.OnClickListene
                 selectedItem = (StringWithTag) destinationBuildingSpinner.getSelectedItem();
             }
             int destination = (int)selectedItem.tag;
+            // start the mapping for room to room navigation
             mListener.onRoomFragmentInteraction(source, destination);
         }
     }

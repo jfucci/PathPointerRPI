@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // set up the drawer and toolbar for UI navigation
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        // Back button takes the user to the previous fragment by popping a stack
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        // handle navigation between each fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        // go to the room fragment on drawer button press
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -115,7 +117,7 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        // go to the facility fragment on drawer button press
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 

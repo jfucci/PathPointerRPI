@@ -62,7 +62,7 @@ public class FacilityChooserFragment extends Fragment implements View.OnClickLis
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-
+        // display the facilities available for navigation
         for (FacilityType facilityType : FacilityType.values()) {
             if(facilityType != FacilityType.Bathroom) {
                 LinearLayout layout = (LinearLayout) view.findViewById(R.id.buttonlayout);

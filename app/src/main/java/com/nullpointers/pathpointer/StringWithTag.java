@@ -1,5 +1,6 @@
 package com.nullpointers.pathpointer;
 
+// StringWithTag was made to keep building/room ids with building/room keys for the spinners
 public class StringWithTag implements Comparable<StringWithTag> {
     public String string;
     public Object tag;
