@@ -320,6 +320,22 @@ public class Campus {
     }
 
     /**
+     * Returns a list of Room objects for this building
+     * @param buildingId the building for which to get rooms
+     * @return a list of Room objects
+     */
+    public List<Room> getRoomList(int buildingId) {
+        Building building = buildings.get(buildingId);
+        Iterator<Room> roomIter = building.roomIterator();
+        List<Room> roomList = new ArrayList<>();
+        while(roomIter.hasNext()) {
+            Room nextRoom = roomIter.next();
+            roomList.add(nextRoom);
+        }
+        return roomList;
+    }
+
+    /**
      *  Split a path by floorplan for frontend viewing
      * @param shortestPath the path to split
      * @return a path divided into sections by the floorplan to which

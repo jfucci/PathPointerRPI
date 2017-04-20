@@ -80,10 +80,8 @@ public class FloorPlanViewGroupFragment extends Fragment {
         List<List<Location>> path;
         if(facilityType == null) {
             path = campus.getShortestPath(sourceRoom, destinationRoom);
-            System.out.println("what: " + path.size());
         } else {
             path = campus.getShortestPath(sourceRoom, facilityType);
-            System.out.println("good: " + path.size());
         }
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), path);
