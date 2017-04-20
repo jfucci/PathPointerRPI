@@ -180,9 +180,6 @@ public class Campus {
                                 locationName, building.getName());
                     }
                     else if (locationName.charAt(0) == '$') { //This is a facility on campus
-                        /*String facName = locationName.substring(2,locationName.length()-1);
-                        facName = String.
-                        FacilityType fType = FacilityType.valueOf();*/
                         FacilityType fType = null;
                         if (locationName.equals("$[MBATHROOM]"))
                             fType = FacilityType.MBathroom;
@@ -372,8 +369,6 @@ public class Campus {
     public List<List<Location>> getShortestPath(int start, FacilityType type) {
         //Get starting location from map
         Location startLocation = locations.get(start);
-        Facility minDest = null;
-        Double minDist = null;
 
         //Find all shortest paths from the starting location using Dijkstra's Algorithm
         DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(campusGraph);
