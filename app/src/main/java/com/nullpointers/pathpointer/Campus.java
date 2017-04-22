@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import android.util.Log;
 import org.jgrapht.*;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
@@ -57,9 +56,6 @@ public class Campus {
         }
         try {
             edgeFiles = assetManager.list(edgesFolder);
-            for (String x : edgeFiles){
-                Log.d("Edge Filename:", x);
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,7 +108,6 @@ public class Campus {
                 InputStream edgeFileStream = null;
                 try {
                     edgeFileStream = assetManager.open(edgesFolder + '/' + edgeFile);
-                    Log.d("Edge File:",edgeFile);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -214,7 +209,6 @@ public class Campus {
                     }
                     else if (fac != null) {
                         String message = String.format("%s -- %b", nextLocation, building==null);
-                        Log.d("ERROR MESSAGE:",message);
                         building.add(fac);
                         campusGraph.addVertex(fac);
                         locations.put(modified_ID, fac);
@@ -249,7 +243,6 @@ public class Campus {
                 String[] details = nextEdge.split(",");
                 int firstLocation = Integer.parseInt(details[0]) + (floorplan * ID_MOD);
                 int secondLocation = Integer.parseInt(details[1]) + (floorplan * ID_MOD);
-                Log.d("Error message:",String.format("%d -- %s -- %d -> %d", floorplan,nextEdge, firstLocation, secondLocation));
                 DefaultWeightedEdge edge =
                         campusGraph.addEdge(locations.get(firstLocation), locations.get(secondLocation));
                 if (floorplan == 0) {
