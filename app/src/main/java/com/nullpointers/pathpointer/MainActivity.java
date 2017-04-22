@@ -10,17 +10,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         RoomChooserFragment.OnFragmentInteractionListener,
         BuildingChooserFragment.OnFragmentInteractionListener,
-        FacilityChooserFragment.OnFragmentInteractionListener,
-        ScheduleUi.OnFragmentInteractionListener,
-        OccurenceFragment.OnFragmentInteractionListener,
-        DeleteEventFragment.OnFragmentInteractionListener {
+        FacilityChooserFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +62,8 @@ public class MainActivity extends AppCompatActivity
             fragmentClass = BuildingChooserFragment.class;
         } else if (id == R.id.nav_room_room) {
             fragmentClass = RoomChooserFragment.class;
-        } else if (id == R.id.nav_facility) {
-            fragmentClass = FacilityChooserFragment.class;
         } else {
-            fragmentClass = ScheduleUi.class;
+            fragmentClass = FacilityChooserFragment.class;
         }
 
         try {
@@ -126,41 +120,5 @@ public class MainActivity extends AppCompatActivity
 
         fragmentTransaction.replace(R.id.flContent, fragment).commit();
         fragmentTransaction.addToBackStack(null);
-    }
-
-    @Override
-    public void onScheduleFragmentInteraction(int event) {
-        Fragment fragment = null;
-
-        try {
-            switch(event) {
-                case 1:
-                    fragment = ScheduleActivity.newInstance();
-                    break;
-                case 2:
-                    fragment = OccurenceFragment.newInstance();
-                    break;
-                case 3:
-                    fragment = DeleteEventFragment.newInstance();
-                    break;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.flContent, fragment).commit();
-        fragmentTransaction.addToBackStack(null);
-    }
-
-    @Override
-    public void onOccurenceFragmentInteraction() {
-
-    }
-
-    @Override
-    public void onDeleteFragmentInteraction() {
     }
 }

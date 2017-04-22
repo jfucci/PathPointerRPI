@@ -14,10 +14,6 @@
             android:id="@+id/nav_facility"
             android:icon="@drawable/ic_menu_facility"
             android:title="Nearest Facility" />
-        <item
-            android:id="@+id/nav_schedule"
-            android:icon="@drawable/ic_menu_calendar"
-            android:title="Schedule" />
     </group>
 
 </menu>
