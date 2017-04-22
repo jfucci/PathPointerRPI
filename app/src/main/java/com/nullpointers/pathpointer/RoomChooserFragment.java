@@ -32,7 +32,7 @@ public class RoomChooserFragment extends Fragment implements View.OnClickListene
     private Spinner destinationBuildingSpinner;
     private Spinner sourceRoomSpinner;
     private Spinner destinationRoomSpinner;
-    Campus campus;
+    private Campus campus;
 
     public RoomChooserFragment() {
         // Required empty public constructor
@@ -45,8 +45,7 @@ public class RoomChooserFragment extends Fragment implements View.OnClickListene
      * @return A new instance of fragment RoomChooserFragment.
      */
     public static RoomChooserFragment newInstance() {
-        RoomChooserFragment fragment = new RoomChooserFragment();
-        return fragment;
+        return new RoomChooserFragment();
     }
 
     @Override

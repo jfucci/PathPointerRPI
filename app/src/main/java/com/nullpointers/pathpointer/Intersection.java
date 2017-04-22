@@ -16,7 +16,7 @@ public class Intersection extends Location {
     public Intersection(Integer id, Integer floorPlan, Double x, Double y) {
         super(id,floorPlan,x,y);
     }
-    protected Intersection(Parcel in) {
+    private Intersection(Parcel in) {
         super(in);
     }
 

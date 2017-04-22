@@ -32,7 +32,7 @@ public class FacilityChooserFragment extends Fragment implements View.OnClickLis
 
     private Spinner sourceBuildingSpinner;
     private Spinner sourceRoomSpinner;
-    Campus campus;
+    private Campus campus;
 
     public FacilityChooserFragment() {
         // Required empty public constructor
@@ -45,13 +45,7 @@ public class FacilityChooserFragment extends Fragment implements View.OnClickLis
      * @return A new instance of fragment FacilityChooserFragment.
      */
     public static FacilityChooserFragment newInstance() {
-        FacilityChooserFragment fragment = new FacilityChooserFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        return new FacilityChooserFragment();
     }
 
     @Override
@@ -70,19 +64,19 @@ public class FacilityChooserFragment extends Fragment implements View.OnClickLis
                 btn.setId(facilityType.getValue());
                 switch(facilityType) {
                     case MBathroom:
-                        btn.setText("Men's Bathroom");
+                        btn.setText(R.string.mbathroom);
                         break;
                     case WBathroom:
-                        btn.setText("Women's Bathroom");
+                        btn.setText(R.string.wbathroom);
                         break;
                     case WaterFountain:
-                        btn.setText("Water Fountain");
+                        btn.setText(R.string.waterfountain);
                         break;
                     case Printer:
-                        btn.setText("Printer");
+                        btn.setText(R.string.printer);
                         break;
                     case VendingMachine:
-                        btn.setText("Vending Machine");
+                        btn.setText(R.string.vendingmachine);
                         break;
                     default:
                         break;

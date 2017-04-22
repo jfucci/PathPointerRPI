@@ -1,6 +1,5 @@
 package com.nullpointers.pathpointer;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -94,11 +93,8 @@ public class Event {
         Event e = (Event)o;
         if (!this.getName().equals(e.getName())) {
             return false;
-        } else if (this.numberOfOccurrences() != e.numberOfOccurrences()) {
-            return false;
-        } else {
-            return this.occurrences.containsAll(e.occurrences);
-        }
+        } else
+            return this.numberOfOccurrences() == e.numberOfOccurrences() && this.occurrences.containsAll(e.occurrences);
     }
 
     @Override

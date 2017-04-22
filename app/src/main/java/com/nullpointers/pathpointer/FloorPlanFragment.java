@@ -55,7 +55,10 @@ public class FloorPlanFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_floor_plan, container, false);
         List<Location> path = getArguments().getParcelableArrayList(PATH);
-        int floorPlanRes = this.getContext().getResources().getIdentifier("map_" + path.get(0).getFloorPlan(), "drawable", this.getContext().getPackageName());
+        int floorPlanRes;
+        if (path != null) {
+            floorPlanRes = this.getContext().getResources().getIdentifier("map_" + path.get(0).getFloorPlan(), "drawable", this.getContext().getPackageName());
+        } else throw new RuntimeException("Path failed to be parsed");
 
         mapView = (TouchImageView) view.findViewById(R.id.mapView);
         // make a bitmap of the campus/floorplan images so that it is drawable

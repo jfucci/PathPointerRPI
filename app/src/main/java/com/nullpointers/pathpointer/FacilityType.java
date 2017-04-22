@@ -8,7 +8,7 @@ public enum FacilityType {
 
     private final int value;
 
-    private FacilityType(int value) {
+    FacilityType(int value) {
         this.value = value;
     }
 

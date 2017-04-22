@@ -42,13 +42,7 @@ public class BuildingChooserFragment extends Fragment implements View.OnClickLis
      */
 
     public static BuildingChooserFragment newInstance() {
-        BuildingChooserFragment fragment = new BuildingChooserFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        return new BuildingChooserFragment();
     }
 
     @Override

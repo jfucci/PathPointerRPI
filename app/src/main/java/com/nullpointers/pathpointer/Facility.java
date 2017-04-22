@@ -25,7 +25,7 @@ public class Facility extends Location{
     /** Returns the type of this facility */
     public FacilityType getType() {return type;}
 
-    protected Facility(Parcel in) {
+    private Facility(Parcel in) {
         super(in);
     }
 

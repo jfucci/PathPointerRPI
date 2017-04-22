@@ -30,7 +30,7 @@ public class Room extends Location {
   /** Returns the building this room is in */
   public String getBuilding() {return building;}
 
-  protected Room(Parcel in) {
+  private Room(Parcel in) {
     super(in);
   }
 
