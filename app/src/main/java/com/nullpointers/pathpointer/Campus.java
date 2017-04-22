@@ -181,6 +181,7 @@ public class Campus {
                     }
                     else if (locationName.charAt(0) == '$') { //This is a facility on campus
                         FacilityType fType = null;
+                        building = buildings.get(buildingId);
                         if (locationName.equals("$[MBATHROOM]"))
                             fType = FacilityType.MBathroom;
                         else if (locationName.equals("$[WBATHROOM]"))
@@ -192,7 +193,6 @@ public class Campus {
                         else if (locationName.equals("$[VENDINGMACHINE]"))
                             fType = FacilityType.VendingMachine;
                         else throw new IOException("Unknown Facility Type: " + locationName);
-                        building = buildings.get(locationID);
                         fac = new Facility(modified_ID,floorplan,xCoord,yCoord,fType);
                     }
                     else {
@@ -208,6 +208,7 @@ public class Campus {
                         locations.put(modified_ID, room);
                     }
                     else if (fac != null) {
+                        String message = String.format("%s -- %b", nextLocation, building==null);
                         building.add(fac);
                         campusGraph.addVertex(fac);
                         locations.put(modified_ID, fac);
