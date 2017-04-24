@@ -53,7 +53,7 @@ public class Occurrence {
     public Time getEnd() {return end;}
 
     /** Returns the location of this occurrence */
-    public Room getLocation() {return location;};
+    public Room getLocation() {return location;}
 
     /**
      * Determines whether this occurrence overlaps occurrence o in time
@@ -62,7 +62,7 @@ public class Occurrence {
      */
     public boolean overlaps(Occurrence o) {
         for(int day = 0; day < 7; day++) {
-            if(this.daysOfWeek[day] == true && o.daysOfWeek[day] == true) {
+            if(this.daysOfWeek[day] && o.daysOfWeek[day]) {
                 if(this.start.isEarlierThan(o.getEnd()) && this.start.isLaterThan(o.getStart())) {
                     return true;
                 }

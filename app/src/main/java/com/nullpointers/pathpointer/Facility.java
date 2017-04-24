@@ -1,5 +1,8 @@
 package com.nullpointers.pathpointer;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * A class to represent facilities on RPI's Campus.
  * Valid Facility Types are defined by the FacilityType Enum.
@@ -21,4 +24,21 @@ public class Facility extends Location{
 
     /** Returns the type of this facility */
     public FacilityType getType() {return type;}
+
+    private Facility(Parcel in) {
+        super(in);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Location> CREATOR = new Parcelable.Creator<Location>() {
+        @Override
+        public Location createFromParcel(Parcel in) {
+            return new Facility(in);
+        }
+
+        @Override
+        public Location[] newArray(int size) {
+            return new Facility[size];
+        }
+    };
 }

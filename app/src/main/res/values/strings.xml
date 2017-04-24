@@ -1,6 +1,15 @@
 <resources>
-    <string name="app_name">PathPointer</string>
-    <string name="hello_world">Hello World!</string>
-    <string name="menu_settings">Settings</string>
+    <string name="app_name">Path Pointer</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="developed_by">Developed by:</string>
+    <string name="team_name">The Null Pointers</string>
+    <string name="title_activity_room_map">RoomMap</string>
+    <string name="action_settings">Settings</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="mbathroom">Men\'s Bathroom</string>
+    <string name="wbathroom">Women\'s Bathroom</string>
+    <string name="waterfountain">Water Fountain</string>
+    <string name="printer">Printer</string>
+    <string name="vendingmachine">Vending Machine</string>
 </resources>

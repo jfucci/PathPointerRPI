@@ -1,5 +1,8 @@
 package com.nullpointers.pathpointer;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * An abstract base class to represent locations within buildings.
  * All locations must have a unique id.
@@ -9,7 +12,7 @@ package com.nullpointers.pathpointer;
  * Note that the default constructor is provided only for compatibility.
  * All usage of default constructed objects is undefined.
  */
-public abstract class Location {
+public abstract class Location implements Parcelable {
     protected Integer id;
     protected Double x;
     protected Double y;
@@ -59,4 +62,45 @@ public abstract class Location {
     public int hashCode() {
         return id.hashCode();
     }
+
+    protected Location(Parcel in) {
+        id = in.readByte() == 0x00 ? null : in.readInt();
+        x = in.readByte() == 0x00 ? null : in.readDouble();
+        y = in.readByte() == 0x00 ? null : in.readDouble();
+        floorPlan = in.readByte() == 0x00 ? null : in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(id);
+        }
+        if (x == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeDouble(x);
+        }
+        if (y == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeDouble(y);
+        }
+        if (floorPlan == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(floorPlan);
+        }
+    }
+
 }

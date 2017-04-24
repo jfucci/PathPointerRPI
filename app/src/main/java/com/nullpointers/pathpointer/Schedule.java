@@ -1,14 +1,9 @@
 package com.nullpointers.pathpointer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializable;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +22,7 @@ import java.util.Set;
 public class Schedule {
 
     /** The location of the Schedule file on the device */
-    public static final String FILENAME = "schedule.json";
+    private static final String FILENAME = "schedule.json";
 
     // The singleton instance
     private static Schedule instance = null;
@@ -91,7 +86,6 @@ public class Schedule {
      * empty Schedule will be created and loaded.  If some other failure occurs, an IOException
      * will be thrown.
      * @return The instance of Schedule
-     * @throws IOException if file cannot be loaded and parsed
      */
     public static Schedule getInstance() {
         if (instance == null) {

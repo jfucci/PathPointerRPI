@@ -66,9 +66,8 @@ public class Building {
         // Organize facilities by type
         this.facilities = new HashMap<>();
         if(facilities != null) {
-            Iterator<Facility> iter = facilities.iterator();
-            while (iter.hasNext()) {
-                addFacilityToSet(iter.next(), this.facilities);
+            for (Facility facility : facilities) {
+                addFacilityToSet(facility, this.facilities);
             }
         }
     }
@@ -158,11 +157,7 @@ public class Building {
      * @return true if this Building contains the specified Facility, false otherwise
      */
     public boolean contains(Facility facility) {
-        if (!facilities.containsKey(facility.getType())) {
-            return false;
-        } else {
-            return facilities.get(facility.getType()).contains(facility);
-        }
+        return facilities.containsKey(facility.getType()) && facilities.get(facility.getType()).contains(facility);
     }
 
     /** Returns the number of Rooms contained in this Building */

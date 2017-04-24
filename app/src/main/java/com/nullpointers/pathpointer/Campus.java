@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jgrapht.*;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
@@ -179,10 +180,8 @@ public class Campus {
                                 locationName, building.getName());
                     }
                     else if (locationName.charAt(0) == '$') { //This is a facility on campus
-                        /*String facName = locationName.substring(2,locationName.length()-1);
-                        facName = String.
-                        FacilityType fType = FacilityType.valueOf();*/
                         FacilityType fType = null;
+                        building = buildings.get(buildingId);
                         if (locationName.equals("$[MBATHROOM]"))
                             fType = FacilityType.MBathroom;
                         else if (locationName.equals("$[WBATHROOM]"))
@@ -194,7 +193,6 @@ public class Campus {
                         else if (locationName.equals("$[VENDINGMACHINE]"))
                             fType = FacilityType.VendingMachine;
                         else throw new IOException("Unknown Facility Type: " + locationName);
-                        building = buildings.get(locationID);
                         fac = new Facility(modified_ID,floorplan,xCoord,yCoord,fType);
                     }
                     else {
@@ -210,6 +208,7 @@ public class Campus {
                         locations.put(modified_ID, room);
                     }
                     else if (fac != null) {
+                        String message = String.format("%s -- %b", nextLocation, building==null);
                         building.add(fac);
                         campusGraph.addVertex(fac);
                         locations.put(modified_ID, fac);
@@ -246,8 +245,14 @@ public class Campus {
                 int secondLocation = Integer.parseInt(details[1]) + (floorplan * ID_MOD);
                 DefaultWeightedEdge edge =
                         campusGraph.addEdge(locations.get(firstLocation), locations.get(secondLocation));
-                campusGraph.setEdgeWeight(edge,
-                        getDistance(locations.get(firstLocation), locations.get(secondLocation)));
+                if (floorplan == 0) {
+                    campusGraph.setEdgeWeight(edge,
+                            100 * getDistance(locations.get(firstLocation), locations.get(secondLocation)));
+                } else {
+                    campusGraph.setEdgeWeight(edge,
+                            getDistance(locations.get(firstLocation), locations.get(secondLocation)));
+                }
+
             }
         } catch (FileNotFoundException fnfe) {
             System.out.println("Invalid edge file");
@@ -319,25 +324,34 @@ public class Campus {
     }
 
     /**
-     * Get the shortest path between the provided locations
-     * @param start ID of the first location
-     * @param end ID of the second location
-     * @return a GraphPath representing the shortest path between locations
+     * Returns a list of Room objects for this building
+     * @param buildingId the building for which to get rooms
+     * @return a list of Room objects
      */
-    public List<List<Location>> getShortestPath(int start, int end) {
-        Location startLocation = locations.get(start);
-        Location endLocation = locations.get(end);
+    public List<Room> getRoomList(int buildingId) {
+        Building building = buildings.get(buildingId);
+        Iterator<Room> roomIter = building.roomIterator();
+        List<Room> roomList = new ArrayList<>();
+        while(roomIter.hasNext()) {
+            Room nextRoom = roomIter.next();
+            roomList.add(nextRoom);
+        }
+        return roomList;
+    }
 
-        DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(campusGraph);
-        GraphPath shortestPath = dijkstraShortestPath.getPath(startLocation, endLocation);
+    /**
+     *  Split a path by floorplan for frontend viewing
+     * @param shortestPath the path to split
+     * @return a path divided into sections by the floorplan to which
+     * each Location on the path belongs to
+     */
+    private List<List<Location>> splitPaths(GraphPath shortestPath) {
         List<Location> path = shortestPath.getVertexList();
-        List<List<Location>> segmentedPath = new ArrayList<>();
         if(path.size() == 0) {
             System.out.println("No path exists");
-            List<Location> empty = new ArrayList<>();
-            segmentedPath.add(empty);
-            return segmentedPath;
+            return null;
         }
+        List<List<Location>> segmentedPath = new ArrayList<>();
         int currentFloorplan = path.get(0).getFloorPlan();
         int i = 0;
         while(i < path.size()) {
@@ -352,5 +366,58 @@ public class Campus {
             }
         }
         return segmentedPath;
+    }
+
+    /**
+     * Get the shortest path between the provided locations
+     * @param start ID of the first location
+     * @param end ID of the second location
+     * @return a GraphPath representing the shortest path between locations
+     */
+    public List<List<Location>> getShortestPath(int start, int end) {
+        Location startLocation = locations.get(start);
+        Location endLocation = locations.get(end);
+
+        DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(campusGraph);
+        GraphPath shortestPath = dijkstraShortestPath.getPath(startLocation, endLocation);
+        return splitPaths(shortestPath);
+    }
+
+    /**
+     * Get the shortest path between the starting location and a facility of given type
+     * @param start ID of the first location
+     * @param type type of facility to find
+     * @return a path representing the shortest path to the nearest 'type' facility
+     */
+    public List<List<Location>> getShortestPath(int start, FacilityType type) {
+        //Get starting location from map
+        Location startLocation = locations.get(start);
+
+        //Find all shortest paths from the starting location using Dijkstra's Algorithm
+        DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(campusGraph);
+
+        //Search all facilities of given type for nearest one
+
+        GraphPath currentShortestPath = null;
+        GraphPath facilityPath;
+        double currentLowestWeight = Double.MAX_VALUE;
+
+        for (Map.Entry<Integer,Building> entry : buildings.entrySet()) {
+            Building building = entry.getValue();
+            Iterator<Facility> facilityIterator = building.facilityIterator(type);
+            while (facilityIterator.hasNext()) {
+                Facility facility = facilityIterator.next();
+                if(facility.getType() == type) {
+                    facilityPath = dijkstraShortestPath.getPath(startLocation, facility);
+                    if(facilityPath.getWeight() < currentLowestWeight) {
+                        currentShortestPath = facilityPath;
+                        currentLowestWeight = facilityPath.getWeight();
+                    }
+                }
+            }
+        }
+
+        //Split paths by floorplan
+        return splitPaths(currentShortestPath);
     }
 }
